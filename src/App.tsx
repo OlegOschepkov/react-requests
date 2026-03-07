@@ -1,11 +1,12 @@
-import './App.css'
 import {Button, HStack} from '@chakra-ui/react';
+import Interface from '@/components/Interface.tsx';
+import {ColorModeButton} from '@/components/ui/color-mode.tsx';
 
 function App() {
   return (
     <HStack>
-      <Button>Click me</Button>
-      <Button>Click me</Button>
+      <Interface />
+      <ColorModeButton>Click me</ColorModeButton>
     </HStack>
   )
 }
