@@ -1,6 +1,6 @@
 import type { TicketStatus } from "@/types/ticket.ts";
 
-export const ticketStatuses: {
+const ticketStatuses: {
   label: string;
   value: TicketStatus | "all";
 }[] = [
@@ -13,3 +13,7 @@ export const ticketStatuses: {
   { label: "Закрыты", value: "closed" },
   { label: "Все статусы", value: "all" },
 ];
+
+const MAX_FILES = 5;
+
+export { ticketStatuses, MAX_FILES };

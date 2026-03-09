@@ -3,87 +3,132 @@ import {
   Portal,
   Button,
   Input,
-  Textarea,
-  Select,
-  Stack,
   Field,
+  VStack,
+  NativeSelect,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import FileUploadComponent from "@/components/FileUpload/FileUpload";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  type CreateTicketForm,
+  createTicketSchema,
+} from "@/schemas/createTicketSchema.ts";
+import type { Ticket, TicketStatus } from "@/types/ticket.ts";
+import { CURRENT_USER } from "@/components/features/tickets/mockData.ts";
 
-const CreateTicketModal = () => {
-  const [open, setOpen] = useState(false);
+interface CreateTicketModalProps {
+  open: boolean;
+  onClose: () => void;
+  onCreate: (ticket: Ticket) => void;
+}
 
-  const handleSubmit = () => {
-    console.log("ticket created");
-    setOpen(false);
+const CreateTicketModal = ({
+  open,
+  onClose,
+  onCreate,
+}: CreateTicketModalProps) => {
+  const [files, setFiles] = useState<FileList | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<CreateTicketForm>({
+    resolver: zodResolver(createTicketSchema),
+    defaultValues: {
+      status: "new",
+    },
+  });
+
+  const onSubmit = (data: CreateTicketForm) => {
+    console.log("Создан тикет:", {
+      ...data,
+      files,
+    });
+
+    const newTicket: Ticket = {
+      id: `T-${Date.now()}`,
+      title: data.title,
+      client: data.client,
+      status: data.status as TicketStatus,
+      assignee: CURRENT_USER,
+      createdAt: new Date().toISOString(),
+    };
+
+    onCreate(newTicket);
+
+    reset();
+    onClose();
   };
 
   return (
-    <>
-      <Button bg="black" color="white" onClick={() => setOpen(true)}>
-        Новая заявка
-      </Button>
+    <Dialog.Root open={open} onOpenChange={(e) => !e.open && onClose()}>
+      <Portal>
+        <Dialog.Backdrop />
 
-      <Dialog.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
-        <Portal>
-          <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Новая заявка</Dialog.Title>
+            </Dialog.Header>
 
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Новая заявка</Dialog.Title>
-              </Dialog.Header>
+            <Dialog.Body>
+              <VStack gap={4}>
+                <Field.Root invalid={!!errors.title}>
+                  <Field.Label>Название</Field.Label>
 
-              <Dialog.Body>
-                <Stack gap={4}>
-                  <Field.Root>
-                    <Field.Label>Тип заявки</Field.Label>
+                  <Input {...register("title")} />
 
-                    <Select>
-                      <option>Ремонт</option>
-                      <option>Обслуживание</option>
-                      <option>Другое</option>
-                    </Select>
-                  </Field.Root>
+                  <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
+                </Field.Root>
 
-                  <Field.Root>
-                    <Field.Label>Приоритет</Field.Label>
+                <Field.Root invalid={!!errors.client}>
+                  <Field.Label>Клиент</Field.Label>
 
-                    <Select>
-                      <option>Низкий</option>
-                      <option>Средний</option>
-                      <option>Высокий</option>
-                    </Select>
-                  </Field.Root>
+                  <Input {...register("client")} />
 
-                  <Field.Root>
-                    <Field.Label>Описание</Field.Label>
+                  <Field.ErrorText>{errors.client?.message}</Field.ErrorText>
+                </Field.Root>
 
-                    <Textarea placeholder="Опишите проблему..." />
-                  </Field.Root>
+                <Field.Root>
+                  <Field.Label>Статус</Field.Label>
 
-                  <Field.Root>
-                    <Field.Label>Фотографии</Field.Label>
+                  <NativeSelect.Root>
+                    <NativeSelect.Field
+                      placeholder="Выберите статус"
+                      {...register("status")}
+                    >
+                      <option value="new">Новая</option>
+                      <option value="review">На рассмотрении</option>
+                      <option value="in_progress">В работе</option>
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
 
-                    <Input type="file" multiple />
-                  </Field.Root>
-                </Stack>
-              </Dialog.Body>
+                  <Field.ErrorText>{errors.status?.message}</Field.ErrorText>
+                </Field.Root>
 
-              <Dialog.Footer gap={3}>
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                  Отмена
-                </Button>
+                <Field.Root>
+                  <FileUploadComponent maxSizeMB={5} onChange={setFiles} />
+                </Field.Root>
+              </VStack>
+            </Dialog.Body>
 
-                <Button bg="black" color="white" onClick={handleSubmit}>
-                  Создать
-                </Button>
-              </Dialog.Footer>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-    </>
+            <Dialog.Footer>
+              <Button variant="outline" onClick={onClose}>
+                Отмена
+              </Button>
+              <Button colorScheme="blackAlpha" onClick={handleSubmit(onSubmit)}>
+                Создать
+              </Button>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   );
 };
 

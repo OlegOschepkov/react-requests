@@ -1,5 +1,4 @@
 import { Stack, VStack } from "@chakra-ui/react";
-import SearchBlock from "@/components/features/tickets/SearchBlock.tsx";
 import PageContainer from "@/components/layout/PageContainer.tsx";
 import TicketsFilters from "@/components/features/tickets/TicketsFilters.tsx";
 import TicketTable from "@/components/TicketTable/TicketTable.tsx";
@@ -8,21 +7,28 @@ import {
   mockTickets,
 } from "@/components/features/tickets/mockData.ts";
 import { useState } from "react";
-import type { TicketStatus } from "@/types/ticket.ts";
+import type { Ticket, TicketStatus } from "@/types/ticket.ts";
 import TicketToolbar from "@/components/TicketToolbar/TicketToolbar.tsx";
 import filterTickets from "@/utils/filterTickets.tsx";
+import CreateTicketModal from "@/components/features/tickets/CreateTicketModal.tsx";
 
 const TicketsPage = () => {
   const [ticketFilter, setTicketFilter] = useState<TicketStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [onlyMy, setOnlyMy] = useState(false);
+  const [isCreateOpen, setCreateOpen] = useState(false);
+  const [tickets, setTickets] = useState(mockTickets);
 
-  const filteredTickets = filterTickets(mockTickets, {
+  const filteredTickets = filterTickets(tickets, {
     status: ticketFilter,
     query: searchQuery,
     onlyMy,
     currentUser: CURRENT_USER,
   });
+
+  const handleCreateTicket = (ticket: Ticket) => {
+    setTickets((prev) => [ticket, ...prev]);
+  };
 
   return (
     <PageContainer>
@@ -32,6 +38,7 @@ const TicketsPage = () => {
           onSearchChange={setSearchQuery}
           onlyMy={onlyMy}
           onToggleMy={() => setOnlyMy((v) => !v)}
+          onCreateClick={() => setCreateOpen(true)}
         />
 
         <VStack gap={6} align="stretch">
@@ -40,6 +47,12 @@ const TicketsPage = () => {
           <TicketTable tickets={filteredTickets} />
         </VStack>
       </Stack>
+
+      <CreateTicketModal
+        open={isCreateOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreate={handleCreateTicket}
+      />
     </PageContainer>
   );
 };

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import CustomButton from "@/components/ui/button.tsx";
 import { User } from "lucide-react";

@@ -5,6 +5,7 @@ interface Props {
   onSearchChange: (value: string) => void;
   onlyMy: boolean;
   onToggleMy: () => void;
+  onCreateClick: () => void;
 }
 
 const TicketToolbar = ({
@@ -12,6 +13,7 @@ const TicketToolbar = ({
   onSearchChange,
   onlyMy,
   onToggleMy,
+  onCreateClick,
 }: Props) => {
   return (
     <HStack justify="space-between" wrap="wrap" gap={4}>
@@ -23,9 +25,17 @@ const TicketToolbar = ({
         />
       </InputGroup>
 
-      <Button variant="outline" onClick={onToggleMy}>
-        {onlyMy ? "Показаны мои" : "Показать только мои"}
-      </Button>
+      <HStack>
+        <Button variant="outline">Экспорт</Button>
+
+        <Button colorScheme="blackAlpha" onClick={onCreateClick}>
+          Новая заявка
+        </Button>
+
+        <Button variant="outline" onClick={onToggleMy}>
+          {onlyMy ? "Показаны мои" : "Показать только мои"}
+        </Button>
+      </HStack>
     </HStack>
   );
 };
