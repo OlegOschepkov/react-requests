@@ -1,44 +1,30 @@
 import { Box, Text, Image, HStack, CloseButton } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MAX_FILES } from "@/constants/ticketStatuses.ts";
 
 interface FileUploadProps {
-  maxSizeMB?: number;
   onChange: (files: File[]) => void;
 }
 
-const FileUploadComponent = ({ maxSizeMB = 5, onChange }: FileUploadProps) => {
+const FileUploadComponent = ({ onChange }: FileUploadProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
 
-  const maxSize = maxSizeMB * 1024 * 1024;
+  useEffect(() => {
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
 
   const processFiles = (fileList: FileList) => {
-    const validFiles: File[] = [];
-    const previewUrls: string[] = [];
-
-    Array.from(fileList).forEach((file) => {
-      if (file.size > maxSize) {
-        alert(`Файл ${file.name} больше ${maxSizeMB}MB`);
-        return;
-      }
-
-      if (files.length + validFiles.length > MAX_FILES) {
-        alert(`Можно загрузить максимум ${MAX_FILES} файлов`);
-        return;
-      }
-
-      validFiles.push(file);
-      previewUrls.push(URL.createObjectURL(file));
-    });
-
-    const updatedFiles = [...files, ...validFiles];
-    const updatedPreviews = [...previews, ...previewUrls];
+    const newFiles = Array.from(fileList);
+    const updatedFiles = [...files, ...newFiles].slice(0, MAX_FILES);
+    const newPreviews = updatedFiles.map((file) => URL.createObjectURL(file));
 
     setFiles(updatedFiles);
-    setPreviews(updatedPreviews);
+    setPreviews(newPreviews);
 
     onChange(updatedFiles);
   };
@@ -57,6 +43,8 @@ const FileUploadComponent = ({ maxSizeMB = 5, onChange }: FileUploadProps) => {
   };
 
   const removeFile = (index: number) => {
+    URL.revokeObjectURL(previews[index]);
+
     const newFiles = files.filter((_, i) => i !== index);
     const newPreviews = previews.filter((_, i) => i !== index);
 

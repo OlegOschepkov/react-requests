@@ -17,7 +17,7 @@ const statusMap = {
 
 const StatusBadge = ({ status }: Props) => {
   const config = statusMap[status];
-  return <Badge colorScheme={config.color}>{config.label}</Badge>;
+  return <Badge color={config.color}>{config.label}</Badge>;
 };
 
 export default StatusBadge;

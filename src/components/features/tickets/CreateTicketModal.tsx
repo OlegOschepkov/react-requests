@@ -5,6 +5,7 @@ import {
   Input,
   Field,
   VStack,
+  Text,
   NativeSelect,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import {
 } from "@/schemas/createTicketSchema.ts";
 import type { Ticket, TicketStatus } from "@/types/ticket.ts";
 import { CURRENT_USER } from "@/components/features/tickets/mockData.ts";
+import { MAX_FILE_SIZE_MB } from "@/constants/ticketStatuses.ts";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -34,12 +36,14 @@ const CreateTicketModal = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<CreateTicketForm>({
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
       status: "new",
+      files: [],
     },
   });
 
@@ -112,7 +116,14 @@ const CreateTicketModal = ({
                 </Field.Root>
 
                 <Field.Root>
-                  <FileUploadComponent maxSizeMB={5} onChange={setFiles} />
+                  <FileUploadComponent
+                    onChange={(files) =>
+                      setValue("files", files, { shouldValidate: true })
+                    }
+                  />
+                  {errors.files && (
+                    <Text color="red.500">{errors.files.message}</Text>
+                  )}
                 </Field.Root>
               </VStack>
             </Dialog.Body>

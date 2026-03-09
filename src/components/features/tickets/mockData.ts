@@ -33,4 +33,10 @@ export const mockTickets: Ticket[] = [
   },
 ];
 
+export const STATUS_LABELS: Record<string, string> = {
+  new: "Новая",
+  in_progress: "В работе",
+  ready: "Готово",
+};
+
 export const CURRENT_USER = "Олег";

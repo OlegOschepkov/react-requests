@@ -15,5 +15,8 @@ const ticketStatuses: {
 ];
 
 const MAX_FILES = 5;
+const MAX_FILE_SIZE_MB = 5;
 
-export { ticketStatuses, MAX_FILES };
+const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+export { ticketStatuses, MAX_FILES, MAX_FILE_SIZE_MB, ALLOWED_FILE_TYPES };
