@@ -11,7 +11,6 @@ import type { Ticket, TicketStatus } from "@/types/ticket.ts";
 import TicketToolbar from "@/components/TicketToolbar/TicketToolbar.tsx";
 import filterTickets from "@/utils/filterTickets.tsx";
 import CreateTicketModal from "@/components/features/tickets/CreateTicketModal.tsx";
-import { useDebounce } from "@/hooks/useDebounce.ts";
 
 const TicketsPage = () => {
   const [ticketFilter, setTicketFilter] = useState<TicketStatus | "all">("all");
@@ -26,8 +25,6 @@ const TicketsPage = () => {
     onlyMy,
     currentUser: CURRENT_USER,
   });
-
-  const debouncedFilteredTickets = useDebounce(filteredTickets, 300);
 
   const handleCreateTicket = (ticket: Ticket) => {
     setTickets((prev) => [ticket, ...prev]);
@@ -47,7 +44,10 @@ const TicketsPage = () => {
         <VStack gap={6} align="stretch">
           <TicketsFilters value={ticketFilter} onChange={setTicketFilter} />
 
-          <TicketTable tickets={debouncedFilteredTickets} />
+          <TicketTable
+            tickets={filteredTickets}
+            hasFilters={searchQuery !== "" || ticketFilter !== "all"}
+          />
         </VStack>
       </Stack>
 

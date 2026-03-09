@@ -1,76 +1,138 @@
-# React + TypeScript + Vite
+# Ticket Management Dashboard
 
-рекомендовано NodeJS 22.13.0.
+Простое SPA-приложение для управления заявками (tickets).  
+Проект демонстрирует современный стек **React + TypeScript** и типичные паттерны разработки интерфейсов: формы, таблицы, фильтрацию, загрузку файлов и валидацию.
 
+## ✨ Возможности
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Работа с тикетами
+- Просмотр списка заявок в таблице
+- Создание новой заявки через модальное окно
+- Отображение статуса, клиента, исполнителя и даты создания
 
-Currently, two official plugins are available:
+### Фильтрация таблицы
+- Фильтры для каждого столбца
+- Всплывающее окно фильтра при клике на иконку в заголовке
+- Debounce для текстовых фильтров
+- Select-фильтр для статуса
+- Подсветка активных фильтров
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Форма создания тикета
+- Валидация через **Zod**
+- Управление формой через **React Hook Form**
+- Очистка формы после отправки
+- Типизированные данные формы
 
-## React Compiler
+### Загрузка файлов
+- Drag & Drop
+- Предпросмотр изображений
+- Удаление файлов
+- Ограничение количества файлов
+- Ограничение размера файлов
+- Проверка типов файлов
+- Очистка `objectURL` для предотвращения утечек памяти
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🧱 Технологии
 
-## Expanding the ESLint configuration
+- **React**
+- **TypeScript**
+- **Chakra UI**
+- **React Hook Form**
+- **Zod**
+- **Vite**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Структура проекта
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```
+src
+│
+├── components
+│   ├── TicketTable
+│   │   └── TicketTable.tsx
+│   │
+│   ├── TicketToolbar
+│   │   └── TicketToolbar.tsx
+│   │
+│   ├── FileUpload
+│   │   └── FileUpload.tsx
+│   │
+│   └── features
+│       └── tickets
+│           ├── CreateTicketModal.tsx
+│           └── mockData.ts
+│
+├── schemas
+│   └── createTicketSchema.ts
+│
+├── hooks
+│   └── useDebounce.ts
+│
+├── constants
+│   └── ticketStatuses.ts
+│
+├── types
+│   └── ticket.ts
+│
+└── App.tsx
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])  
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧩 Основные типы
+
+### Ticket
+
+```ts
+export interface Ticket {
+  id: string;
+  title: string;
+  client: string;
+  status: TicketStatus;
+  assignee: string;
+  createdAt: string;
+}
+````
+
+### TicketStatus
+
+```ts
+export type TicketStatus =
+  | "new"
+  | "in_progress"
+  | "ready";
+```
+
+## 🚀 Установка и запуск
+
+### Установка зависимостей
+
+```bash
+npm install
+```
+
+### Запуск dev-сервера
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу:
+
+```
+http://localhost:5173
+```
+
+### Проверка TypeScript
+
+```bash
+tsc --noEmit
+```
+
+## 🧪 Демонстрационные данные
+
+Для демонстрации используется mock-данные:
+
+```
+src/components/features/tickets/mockData.ts
 ```

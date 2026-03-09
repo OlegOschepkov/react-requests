@@ -1,18 +1,27 @@
-import { Table, Box } from "@chakra-ui/react";
-
+import { Table, Box, VStack } from "@chakra-ui/react";
 import type { Ticket } from "@/types/ticket.ts";
 import StatusBadge from "@/components/TicketTable/StatusBadge.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ColumnFilter from "@/components/ColumnFilter/ColumnFilter.tsx";
 import { STATUS_LABELS } from "@/components/features/tickets/mockData.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+import TicketTableSkeleton from "@/components/TicketTable/TicketTableSkeleton.tsx";
+import TicketTableEmptyState from "@/components/TicketTable/TicketTableEmptyState.tsx";
 
-interface Props {
+interface TicketTableProps {
   tickets: Ticket[];
+  hasFilters: boolean;
 }
 
-const TicketTable = ({ tickets }: Props) => {
-  const [columnFilters, setColumnFilters] = useState({
+interface ColumnFilters {
+  title: string;
+  client: string;
+  status: string;
+}
+
+const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [columnFilters, setColumnFilters] = useState<ColumnFilters>({
     title: "",
     client: "",
     status: "",
@@ -30,13 +39,26 @@ const TicketTable = ({ tickets }: Props) => {
     });
   });
 
-  if (!tickets.length) {
-    // TODO
-    return (
-      <Box p={10} textAlign="center" bg="white" borderRadius="lg" shadow="sm">
-        Нет заявок
-      </Box>
-    );
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // useEffect(() => { // скорее всего излишне
+  //   setLoading(true);
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 300);
+  //
+  //   return () => clearTimeout(timer);
+  // }, [debouncedFilters]);
+
+  if (loading) {
+    return <TicketTableSkeleton />;
   }
 
   return (
@@ -117,20 +139,30 @@ const TicketTable = ({ tickets }: Props) => {
               <Table.ColumnHeader>Исполнитель</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
-            {filteredTickets.map((ticket) => (
-              <Table.Row key={ticket.id} _hover={{ bg: "gray.50" }}>
-                <Table.Cell>{ticket.id}</Table.Cell>
-                <Table.Cell>{ticket.title}</Table.Cell>
-                <Table.Cell>{ticket.client}</Table.Cell>
-                <Table.Cell>{ticket.createdAt}</Table.Cell>
-                <Table.Cell>
-                  <StatusBadge status={ticket.status} />
-                </Table.Cell>
-                <Table.Cell>{ticket.assignee ?? "-"}</Table.Cell>
-              </Table.Row>
-            ))}
+            {tickets.length === 0 ? (
+              hasFilters ? (
+                <TicketTableEmptyState
+                  message="Ничего не найдено"
+                  description="Попробуйте изменить фильтры"
+                />
+              ) : (
+                <TicketTableEmptyState message="Нет заявок" />
+              )
+            ) : (
+              filteredTickets.map((ticket) => (
+                <Table.Row key={ticket.id} _hover={{ bg: "gray.50" }}>
+                  <Table.Cell>{ticket.id}</Table.Cell>
+                  <Table.Cell>{ticket.title}</Table.Cell>
+                  <Table.Cell>{ticket.client}</Table.Cell>
+                  <Table.Cell>{ticket.createdAt}</Table.Cell>
+                  <Table.Cell>
+                    <StatusBadge status={ticket.status} />
+                  </Table.Cell>
+                  <Table.Cell>{ticket.assignee ?? "-"}</Table.Cell>
+                </Table.Row>
+              ))
+            )}
           </Table.Body>
         </Table.Root>
       </Box>

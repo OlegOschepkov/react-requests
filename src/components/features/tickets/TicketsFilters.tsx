@@ -10,7 +10,6 @@ interface TicketsFiltersProps {
 }
 
 const TicketsFilters = ({ value, onChange }: TicketsFiltersProps) => {
-  console.log(value);
   return (
     <Flex gap={2} wrap="wrap" align="center">
       {ticketStatuses.map((status) => {

@@ -18,7 +18,6 @@ import {
 } from "@/schemas/createTicketSchema.ts";
 import type { Ticket, TicketStatus } from "@/types/ticket.ts";
 import { CURRENT_USER } from "@/components/features/tickets/mockData.ts";
-import { MAX_FILE_SIZE_MB } from "@/constants/ticketStatuses.ts";
 
 interface CreateTicketModalProps {
   open: boolean;

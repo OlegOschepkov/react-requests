@@ -39,4 +39,6 @@ export const STATUS_LABELS: Record<string, string> = {
   ready: "Готово",
 };
 
+export const ROWS = 5;
+
 export const CURRENT_USER = "Олег";

@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Circle,
   Flex,
   Float,
   HStack,
@@ -10,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
 import LinkCustom from "@/components/ui/link-custom.tsx";
-import React from "react";
 
 const Header = () => {
   return (
