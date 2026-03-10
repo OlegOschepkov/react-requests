@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import CustomButton from "@/components/ui/button.tsx";
 import { User } from "lucide-react";
 import type { TicketStatus } from "@/types/ticket.ts";
-import { ticketStatuses } from "@/constants/ticketStatuses.ts";
+import { ticketStatuses } from "@/mockData/ticketStatuses.ts";
 
 interface TicketsFiltersProps {
   value: TicketStatus | "all";

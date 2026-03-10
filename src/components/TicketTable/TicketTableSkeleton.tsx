@@ -1,41 +1,46 @@
-import { Table, Skeleton } from "@chakra-ui/react";
-import { ROWS } from "@/components/features/tickets/mockData.ts";
+import { Table, Skeleton, Box, IconButton } from "@chakra-ui/react";
+import { ROWS } from "@/mockData/mockData.ts";
+import { ticketColumns } from "@/components/TicketTable/ticketColumns.tsx";
+import { LuFilter } from "react-icons/lu";
 
 const TicketTableSkeleton = () => {
   return (
-    <Table.Root>
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeader>Название</Table.ColumnHeader>
-          <Table.ColumnHeader>Клиент</Table.ColumnHeader>
-          <Table.ColumnHeader>Статус</Table.ColumnHeader>
-          <Table.ColumnHeader>Исполнитель</Table.ColumnHeader>
-          <Table.ColumnHeader>Дата</Table.ColumnHeader>
-        </Table.Row>
-      </Table.Header>
+    <Box
+      overflowX="auto"
+      bg="white"
+      borderRadius="lg"
+      shadow="sm"
+      overflow="hidden"
+    >
+      <Box overflowX="auto">
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              {ticketColumns.map((column) => (
+                <Table.ColumnHeader key={column.key}>
+                  {column.header}
+                  <IconButton aria-label="filter" size="xs" variant="ghost">
+                    <LuFilter />
+                  </IconButton>
+                </Table.ColumnHeader>
+              ))}
+            </Table.Row>
+          </Table.Header>
 
-      <Table.Body>
-        {Array.from({ length: ROWS }).map((_, i) => (
-          <Table.Row key={i}>
-            <Table.Cell>
-              <Skeleton height="20px" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton height="20px" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton height="20px" width="80px" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton height="20px" width="120px" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton height="20px" width="100px" />
-            </Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+          <Table.Body>
+            {Array.from({ length: ROWS }).map((_, i) => (
+              <Table.Row key={i}>
+                {ticketColumns.map(() => (
+                  <Table.Cell>
+                    <Skeleton height="20px" />
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </Box>
+    </Box>
   );
 };
 

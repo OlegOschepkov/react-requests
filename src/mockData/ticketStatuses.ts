@@ -1,4 +1,4 @@
-import type { TicketStatus } from "@/types/ticket.ts";
+import type { PriorityStatus, TicketStatus } from "@/types/ticket.ts";
 
 const ticketStatuses: {
   label: string;

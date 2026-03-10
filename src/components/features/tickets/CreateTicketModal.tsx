@@ -8,21 +8,30 @@ import {
   Text,
   NativeSelect,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import FileUploadComponent from "@/components/FileUpload/FileUpload";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import FileUploadComponent from "@/components/FileUpload/FileUpload";
+
 import {
   type CreateTicketForm,
   createTicketSchema,
-} from "@/schemas/createTicketSchema.ts";
-import type { Ticket, TicketStatus } from "@/types/ticket.ts";
-import { CURRENT_USER } from "@/components/features/tickets/mockData.ts";
+} from "@/schemas/createTicketSchema";
+
+import type { FormTicket, Ticket } from "@/types/ticket";
+
+import {
+  CATEGORY_LABELS,
+  PRIORITY_LABELS,
+  formLocValues,
+} from "@/mockData/mockData";
+import { mapRecordToOptions } from "@/hooks/mapRecordToOptions.ts";
+import { formatCreatedAt } from "@/utils/dateFormat.ts";
 
 interface CreateTicketModalProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (ticket: Ticket) => void;
+  onCreate: (ticket: FormTicket) => void;
 }
 
 const CreateTicketModal = ({
@@ -30,8 +39,6 @@ const CreateTicketModal = ({
   onClose,
   onCreate,
 }: CreateTicketModalProps) => {
-  const [files, setFiles] = useState<FileList | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -46,20 +53,31 @@ const CreateTicketModal = ({
     },
   });
 
+  const categoryOptions = mapRecordToOptions(CATEGORY_LABELS);
+  const priorityOptions = mapRecordToOptions(PRIORITY_LABELS);
+
   const onSubmit = (data: CreateTicketForm) => {
     console.log("Создан тикет:", {
       ...data,
-      files,
     });
 
-    const newTicket: Ticket = {
+    const selectedLoc = formLocValues.find((loc) => loc.id == data.locId);
+    const selectedCat = formLocValues.find((loc) => loc.id == data.locId);
+
+    const newTicket: FormTicket = {
       id: `T-${Date.now()}`,
-      title: data.title,
-      client: data.client,
-      status: data.status as TicketStatus,
-      assignee: CURRENT_USER,
-      createdAt: new Date().toISOString(),
+      loc: selectedLoc,
+      about: data.about,
+      category: data.category,
+      priority: data.priority,
+      description: data.description,
+      status: "new",
+      createdAt: formatCreatedAt(),
     };
+
+    console.log("Создан newTicket:", {
+      ...newTicket,
+    });
 
     onCreate(newTicket);
 
@@ -80,33 +98,77 @@ const CreateTicketModal = ({
 
             <Dialog.Body>
               <VStack gap={4}>
-                <Field.Root invalid={!!errors.title}>
-                  <Field.Label>Название</Field.Label>
+                {/* Аптека */}
+                <Field.Root invalid={!!errors.loc}>
+                  <Field.Label>Аптека</Field.Label>
 
-                  <Input {...register("title")} />
+                  <NativeSelect.Root>
+                    <NativeSelect.Field {...register("locId")} defaultValue="">
+                      <option value="" disabled hidden>
+                        Выберите аптеку
+                      </option>
+                      {formLocValues.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.id}, {loc.name}
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
 
-                  <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
+                  <Field.ErrorText>{errors.loc?.message}</Field.ErrorText>
                 </Field.Root>
 
-                <Field.Root invalid={!!errors.client}>
-                  <Field.Label>Клиент</Field.Label>
+                {/* Тема */}
+                <Field.Root invalid={!!errors.about}>
+                  <Field.Label>Тема</Field.Label>
 
-                  <Input {...register("client")} />
+                  <Input {...register("about")} />
 
-                  <Field.ErrorText>{errors.client?.message}</Field.ErrorText>
+                  <Field.ErrorText>{errors.about?.message}</Field.ErrorText>
                 </Field.Root>
 
-                <Field.Root>
-                  <Field.Label>Статус</Field.Label>
+                {/* Категория */}
+                <Field.Root invalid={!!errors.category}>
+                  <Field.Label>Категория заявки</Field.Label>
 
                   <NativeSelect.Root>
                     <NativeSelect.Field
-                      placeholder="Выберите статус"
-                      {...register("status")}
+                      {...register("category")}
+                      defaultValue=""
                     >
-                      <option value="new">Новая</option>
-                      <option value="review">На рассмотрении</option>
-                      <option value="in_progress">В работе</option>
+                      <option value="" disabled hidden>
+                        Холодильники, кондиционеры или другое
+                      </option>
+                      {categoryOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+
+                  <Field.ErrorText>{errors.category?.message}</Field.ErrorText>
+                </Field.Root>
+
+                {/* Приоритет */}
+                <Field.Root invalid={!!errors.status}>
+                  <Field.Label>Приоритет</Field.Label>
+
+                  <NativeSelect.Root>
+                    <NativeSelect.Field
+                      {...register("priority")}
+                      defaultValue=""
+                    >
+                      <option value="" disabled hidden>
+                        Средний: влияет на эффективность, но не стопорит
+                      </option>
+                      {priorityOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </NativeSelect.Field>
                     <NativeSelect.Indicator />
                   </NativeSelect.Root>
@@ -114,12 +176,25 @@ const CreateTicketModal = ({
                   <Field.ErrorText>{errors.status?.message}</Field.ErrorText>
                 </Field.Root>
 
+                {/* Описание */}
+                <Field.Root invalid={!!errors.description}>
+                  <Field.Label>Описание</Field.Label>
+
+                  <Input {...register("description")} />
+
+                  <Field.ErrorText>
+                    {errors.description?.message}
+                  </Field.ErrorText>
+                </Field.Root>
+
+                {/* Файлы */}
                 <Field.Root>
                   <FileUploadComponent
                     onChange={(files) =>
                       setValue("files", files, { shouldValidate: true })
                     }
                   />
+
                   {errors.files && (
                     <Text color="red.500">{errors.files.message}</Text>
                   )}
@@ -131,6 +206,7 @@ const CreateTicketModal = ({
               <Button variant="outline" onClick={onClose}>
                 Отмена
               </Button>
+
               <Button colorScheme="blackAlpha" onClick={handleSubmit(onSubmit)}>
                 Создать
               </Button>

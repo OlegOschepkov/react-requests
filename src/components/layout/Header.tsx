@@ -6,19 +6,46 @@ import {
   Float,
   HStack,
   Text,
+  Menu,
+  IconButton,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
 import LinkCustom from "@/components/ui/link-custom.tsx";
+import { MenuIcon } from "lucide-react";
 
 const Header = () => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <Box borderBottom="1px solid" borderColor={""}>
       <PageContainer>
         <HStack align="center" justify="space-between">
-          <HStack gap="14px">
-            <LinkCustom href="#">Заявки</LinkCustom>
-            <LinkCustom href="#">Отчёты</LinkCustom>
-          </HStack>
+          {isMobile ? (
+            <Menu.Root>
+              <Menu.Trigger asChild>
+                <IconButton aria-label="Меню" variant="ghost">
+                  <Menu.Item asChild>
+                    <LinkCustom href="#">Заявки</LinkCustom>
+                  </Menu.Item>
+
+                  <MenuIcon size={24} />
+                </IconButton>
+              </Menu.Trigger>
+              <Menu.Positioner>
+                <Menu.Content>
+                  <Menu.Item asChild>
+                    <LinkCustom href="#">Отчёты</LinkCustom>
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Menu.Root>
+          ) : (
+            <HStack gap="14px">
+              <LinkCustom href="#">Заявки</LinkCustom>
+              <LinkCustom href="#">Отчёты</LinkCustom>
+            </HStack>
+          )}
 
           <HStack gap="18px">
             <Avatar.Root>

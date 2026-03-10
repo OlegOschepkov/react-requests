@@ -3,7 +3,6 @@ import type { Ticket, TicketStatus } from "@/types/ticket.ts";
 interface Filters {
   status: TicketStatus | "all";
   query: string;
-  onlyMy: boolean;
   currentUser: string;
 }
 
@@ -15,10 +14,19 @@ const filterTickets = (tickets: Ticket[], filters: Filters) => {
       filters.status === "all" || ticket.status === filters.status;
 
     const searchableFields = [
+      // указываем только доступные пользователю поля
       ticket.id,
-      ticket.title,
-      ticket.client,
+      ticket.loc.id,
+      ticket.loc.name,
+      ticket.createdAt.date,
+      ticket.createdAt.time,
+      ticket.priority,
+      ticket.about,
+      ticket.category,
       ticket.assignee ?? "",
+      ticket.reactionTime,
+      ticket.solution ?? "",
+      ticket.status,
     ];
 
     const matchesSearch = searchableFields
@@ -26,10 +34,7 @@ const filterTickets = (tickets: Ticket[], filters: Filters) => {
       .toLowerCase()
       .includes(query);
 
-    const matchesMy =
-      !filters.onlyMy || ticket.assignee === filters.currentUser;
-
-    return matchesStatus && matchesSearch && matchesMy;
+    return matchesStatus && matchesSearch;
   });
 };
 

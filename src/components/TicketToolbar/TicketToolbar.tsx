@@ -3,18 +3,10 @@ import { HStack, Input, Button, InputGroup } from "@chakra-ui/react";
 interface Props {
   search: string;
   onSearchChange: (value: string) => void;
-  onlyMy: boolean;
-  onToggleMy: () => void;
   onCreateClick: () => void;
 }
 
-const TicketToolbar = ({
-  search,
-  onSearchChange,
-  onlyMy,
-  onToggleMy,
-  onCreateClick,
-}: Props) => {
+const TicketToolbar = ({ search, onSearchChange, onCreateClick }: Props) => {
   return (
     <HStack justify="space-between" wrap="wrap" gap={4}>
       <InputGroup maxW="400px">
@@ -30,10 +22,6 @@ const TicketToolbar = ({
 
         <Button colorScheme="blackAlpha" onClick={onCreateClick}>
           Новая заявка
-        </Button>
-
-        <Button variant="outline" onClick={onToggleMy}>
-          {onlyMy ? "Показаны мои" : "Показать только мои"}
         </Button>
       </HStack>
     </HStack>

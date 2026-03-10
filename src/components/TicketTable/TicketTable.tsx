@@ -1,12 +1,11 @@
-import { Table, Box, VStack } from "@chakra-ui/react";
+import { Table, Box } from "@chakra-ui/react";
 import type { Ticket } from "@/types/ticket.ts";
-import StatusBadge from "@/components/TicketTable/StatusBadge.tsx";
 import { useEffect, useState } from "react";
 import ColumnFilter from "@/components/ColumnFilter/ColumnFilter.tsx";
-import { STATUS_LABELS } from "@/components/features/tickets/mockData.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import TicketTableSkeleton from "@/components/TicketTable/TicketTableSkeleton.tsx";
 import TicketTableEmptyState from "@/components/TicketTable/TicketTableEmptyState.tsx";
+import { ticketColumns } from "@/components/TicketTable/ticketColumns.tsx";
 
 interface TicketTableProps {
   tickets: Ticket[];
@@ -73,70 +72,39 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
         <Table.Root>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>ID</Table.ColumnHeader>
-              <Table.ColumnHeader>
-                Название
-                <ColumnFilter
-                  value={columnFilters.title}
-                  onChange={(value) =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      title: value,
-                    }))
-                  }
-                  onReset={() =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      title: "",
-                    }))
-                  }
-                />
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                Клиент
-                <ColumnFilter
-                  value={columnFilters.client}
-                  onChange={(value) =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      client: value,
-                    }))
-                  }
-                  onReset={() =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      client: "",
-                    }))
-                  }
-                />
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>Дата</Table.ColumnHeader>
-              <Table.ColumnHeader>
-                Статус
-                <ColumnFilter
-                  type="select"
-                  value={columnFilters.status}
-                  options={Object.entries(STATUS_LABELS).map(
-                    ([value, label]) => ({
-                      value,
-                      label,
-                    }),
-                  )}
-                  onChange={(value) =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      status: value,
-                    }))
-                  }
-                  onReset={() =>
-                    setColumnFilters((prev) => ({
-                      ...prev,
-                      status: "",
-                    }))
-                  }
-                />
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>Исполнитель</Table.ColumnHeader>
+              {ticketColumns.map((column) => (
+                <Table.ColumnHeader key={column.key}>
+                  {column.header}
+                  <ColumnFilter
+                    value={
+                      columnFilters[column.key as keyof ColumnFilters] ?? ""
+                    }
+                    onChange={(value) =>
+                      setColumnFilters((prev) => ({
+                        ...prev,
+                        title: value,
+                      }))
+                    }
+                    onReset={() =>
+                      setColumnFilters((prev) => ({
+                        ...prev,
+                        title: "",
+                      }))
+                    }
+                    {...(column.filterType === "select"
+                      ? {
+                          type: "select",
+                          options: Object.entries(column.options).map(
+                            ([value, label]) => ({
+                              value,
+                              label,
+                            }),
+                          ),
+                        }
+                      : {})}
+                  />
+                </Table.ColumnHeader>
+              ))}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -152,14 +120,11 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
             ) : (
               filteredTickets.map((ticket) => (
                 <Table.Row key={ticket.id} _hover={{ bg: "gray.50" }}>
-                  <Table.Cell>{ticket.id}</Table.Cell>
-                  <Table.Cell>{ticket.title}</Table.Cell>
-                  <Table.Cell>{ticket.client}</Table.Cell>
-                  <Table.Cell>{ticket.createdAt}</Table.Cell>
-                  <Table.Cell>
-                    <StatusBadge status={ticket.status} />
-                  </Table.Cell>
-                  <Table.Cell>{ticket.assignee ?? "-"}</Table.Cell>
+                  {ticketColumns.map((column) => (
+                    <Table.Cell key={column.key}>
+                      {column.render(ticket)}
+                    </Table.Cell>
+                  ))}
                 </Table.Row>
               ))
             )}

@@ -5,12 +5,22 @@ interface LinkProps {
   children: string;
 }
 
+import { chakra } from "@chakra-ui/react";
+
+const StyledLink = chakra("a", {
+  baseStyle: {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    px: 3,
+    py: 2,
+    borderRadius: "md",
+    transition: "all 0.2s",
+  },
+});
+
 const LinkCustom = ({ href, children }: LinkProps) => {
-  return (
-    <Link href={href} variant="plain">
-      {children}
-    </Link>
-  );
+  return <StyledLink href={href}>{children}</StyledLink>;
 };
 
 export default LinkCustom;
