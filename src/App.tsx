@@ -5,8 +5,6 @@ const App = () => {
   return (
     <>
       <Header />
-      {/*<Interface />*/}
-      {/*<ColorModeButton>Click me</ColorModeButton>*/}
       <TicketsPage />
     </>
   );

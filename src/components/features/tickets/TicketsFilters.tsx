@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import CustomButton from "@/components/ui/button.tsx";
 import { User } from "lucide-react";
 import type { TicketStatus } from "@/types/ticket.ts";
-import { ticketStatuses } from "@/mockData/ticketStatuses.ts";
+import { ticketStatuses } from "@/mockData/mockData.ts";
 
 interface TicketsFiltersProps {
   value: TicketStatus | "all";
@@ -28,7 +28,8 @@ const TicketsFilters = ({ value, onChange }: TicketsFiltersProps) => {
         );
       })}
 
-      <CustomButton leftIcon={<User size={16} />}>
+      <CustomButton>
+        <User size={16} />
         Показать только мои
       </CustomButton>
     </Flex>

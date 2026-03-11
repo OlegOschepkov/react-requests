@@ -1,8 +1,36 @@
-import type { Ticket } from "@/types/ticket.ts";
+import type {
+  Category,
+  PriorityStatus,
+  Ticket,
+  TicketStatus,
+} from "@/types/ticket.ts";
 import { ChevronDown, ChevronsUp, ChevronUp, Diamond } from "lucide-react";
-import React from "react";
+import type { LucideIcon } from "lucide-react";
 
-export const mockTickets: Ticket[] = [
+// ===== ТИПЫ =====
+interface StatusMapItem {
+  label: string;
+  color: string;
+}
+
+interface PriorityStatusItem {
+  label: string;
+  icon: LucideIcon;
+  color: string;
+}
+
+interface FormLocValue {
+  id: string;
+  name: string;
+}
+
+interface TicketStatusOption {
+  label: string;
+  value: TicketStatus | "all";
+}
+
+// ===== МОК-ДАННЫЕ =====
+const mockTickets: Ticket[] = [
   {
     id: "ХЛ-0002",
     loc: {
@@ -24,7 +52,8 @@ export const mockTickets: Ticket[] = [
   },
 ];
 
-export const STATUS_LABELS: Record<string, string> = {
+// ===== ЛЕЙБЛЫ ДЛЯ ФИЛЬТРОВ =====
+const STATUS_LABELS: Record<TicketStatus, string> = {
   new: "Новая",
   rejected: "Отклонены",
   review: "На рассмотрении",
@@ -34,7 +63,7 @@ export const STATUS_LABELS: Record<string, string> = {
   closed: "Закрыты",
 };
 
-export const CATEGORY_LABELS: Record<string, string> = {
+const CATEGORY_LABELS: Record<Category, string> = {
   cashbox: "Кассы",
   refrigerators: "Холодильники",
   conditioner: "Кондиционеры",
@@ -44,18 +73,23 @@ export const CATEGORY_LABELS: Record<string, string> = {
   sanitary: "Сантехника",
 };
 
-export const PRIORITY_LABELS: Record<string, string> = {
+const PRIORITY_LABELS: Record<PriorityStatus, string> = {
   low: "Низкий",
   medium: "Средний",
   high: "Высокий",
   critical: "Критич.",
 };
 
-export const ROWS = 5;
+// ===== КОНСТАНТЫ =====
+const ROWS = 5;
+const CURRENT_USER = "Олег";
 
-export const CURRENT_USER = "Олег";
+const MAX_FILES = 5;
+const MAX_FILE_SIZE_MB = 5;
+const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
-export const statusMap = {
+// ===== МАППИНГИ ДЛЯ UI =====
+const statusMap: Record<TicketStatus, StatusMapItem> = {
   new: { label: "Новая", color: "blue" },
   rejected: { label: "Отклонена", color: "red" },
   review: { label: "На рассмотрении", color: "orange" },
@@ -65,38 +99,47 @@ export const statusMap = {
   closed: { label: "Закрыта", color: "gray" },
 };
 
-export const priorityStatuses = {
-  low: { label: "Низкий", icon: ChevronDown, color: "nokColor" },
-  medium: { label: "Средний", icon: Diamond, color: "goldColor" },
-  high: { label: "Высокий", icon: ChevronUp, color: "nokColor" },
-  critical: { label: "Критич.", icon: ChevronsUp, color: "nokColor" },
+const priorityStatuses: Record<PriorityStatus, PriorityStatusItem> = {
+  low: { label: "Низкий", icon: ChevronDown, color: "red" },
+  medium: { label: "Средний", icon: Diamond, color: "yellow.100" },
+  high: { label: "Высокий", icon: ChevronUp, color: "red" },
+  critical: { label: "Критич.", icon: ChevronsUp, color: "red" },
 };
 
-export const formLocValues = [
-  {
-    id: "065",
-    name: "Геленджик Островского 7",
-  },
-  {
-    id: "150",
-    name: "Кореновск Красная 108",
-  },
-  {
-    id: "045",
-    name: "Тимашевск Интернац 3Б",
-  },
-  {
-    id: "164",
-    name: "РнД Сельмаш 92",
-  },
-  {
-    id: "190",
-    name: "РнД Сельмаш 92",
-  },
-  {
-    id: "267",
-    name: "Анапа Парковая 67к2",
-  },
+// ===== ДАННЫЕ ДЛЯ ФОРМ =====
+const formLocValues: FormLocValue[] = [
+  { id: "065", name: "Геленджик Островского 7" },
+  { id: "150", name: "Кореновск Красная 108" },
+  { id: "045", name: "Тимашевск Интернац 3Б" },
+  { id: "164", name: "РнД Сельмаш 92" },
+  { id: "190", name: "РнД Сельмаш 92" },
+  { id: "267", name: "Анапа Парковая 67к2" },
 ];
 
-console.log(new Date().toISOString());
+// ===== СТАТУСЫ ДЛЯ ТАБЛИЦЫ =====
+const ticketStatuses: TicketStatusOption[] = [
+  { label: "Новые", value: "new" },
+  { label: "Отклонены", value: "rejected" },
+  { label: "На рассмотрении", value: "review" },
+  { label: "В работе", value: "in_progress" },
+  { label: "Ожидают запчасти", value: "waiting_parts" },
+  { label: "Готовы", value: "ready" },
+  { label: "Закрыты", value: "closed" },
+  { label: "Все статусы", value: "all" },
+];
+
+export {
+  ticketStatuses,
+  MAX_FILES,
+  MAX_FILE_SIZE_MB,
+  ALLOWED_FILE_TYPES,
+  formLocValues,
+  priorityStatuses,
+  statusMap,
+  CURRENT_USER,
+  ROWS,
+  PRIORITY_LABELS,
+  CATEGORY_LABELS,
+  STATUS_LABELS,
+  mockTickets,
+};

@@ -7,6 +7,15 @@ export type TicketStatus =
   | "ready"
   | "closed";
 
+export type Category =
+  | "cashbox"
+  | "refrigerators"
+  | "conditioner"
+  | "measure"
+  | "room"
+  | "it"
+  | "sanitary";
+
 export type PriorityStatus = "low" | "medium" | "high" | "critical";
 
 export interface Ticket {
@@ -20,9 +29,9 @@ export interface Ticket {
     time: string;
     dateTime: number; // in ms
   };
-  priority: string;
+  priority: PriorityStatus;
   about: string;
-  category: string;
+  category: Category;
   assignee: string;
   reactionTime: string;
   solution: string;

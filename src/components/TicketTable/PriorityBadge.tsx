@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
-import type { TicketStatus } from "@/types/ticket.ts";
+import type { PriorityStatus } from "@/types/ticket.ts";
 import { priorityStatuses } from "@/mockData/mockData.ts";
 
 interface Props {
-  status: TicketStatus;
+  status: PriorityStatus;
 }
 
 const PriorityBadge = ({ status }: Props) => {

@@ -1,6 +1,6 @@
 import { Box, Text, Image, HStack, CloseButton } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { MAX_FILES } from "@/mockData/ticketStatuses.ts";
+import { MAX_FILES } from "@/mockData/mockData.ts";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;

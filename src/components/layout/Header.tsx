@@ -25,17 +25,20 @@ const Header = () => {
             <Menu.Root>
               <Menu.Trigger asChild>
                 <IconButton aria-label="Меню" variant="ghost">
-                  <Menu.Item asChild>
-                    <LinkCustom href="#">Заявки</LinkCustom>
-                  </Menu.Item>
-
                   <MenuIcon size={24} />
                 </IconButton>
               </Menu.Trigger>
+
               <Menu.Positioner>
                 <Menu.Content>
-                  <Menu.Item asChild>
-                    <LinkCustom href="#">Отчёты</LinkCustom>
+                  <Menu.Item value="tickets" asChild>
+                    <LinkCustom href="#">Заявки</LinkCustom>
+                  </Menu.Item>
+
+                  <Menu.Item value="reports" asChild>
+                    <LinkCustom href="#" pointerEvents="none">
+                      Отчёты
+                    </LinkCustom>
                   </Menu.Item>
                 </Menu.Content>
               </Menu.Positioner>

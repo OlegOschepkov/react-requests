@@ -4,7 +4,7 @@ import TicketsFilters from "@/components/features/tickets/TicketsFilters.tsx";
 import TicketTable from "@/components/TicketTable/TicketTable.tsx";
 import { CURRENT_USER, mockTickets } from "@/mockData/mockData.ts";
 import { useState } from "react";
-import type { Ticket, TicketStatus } from "@/types/ticket.ts";
+import type { FormTicket, Ticket, TicketStatus } from "@/types/ticket.ts";
 import TicketToolbar from "@/components/TicketToolbar/TicketToolbar.tsx";
 import filterTickets from "@/utils/filterTickets.tsx";
 import CreateTicketModal from "@/components/features/tickets/CreateTicketModal.tsx";
@@ -12,7 +12,7 @@ import CreateTicketModal from "@/components/features/tickets/CreateTicketModal.t
 const TicketsPage = () => {
   const [ticketFilter, setTicketFilter] = useState<TicketStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isCreateOpen, setCreateOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [tickets, setTickets] = useState(mockTickets);
 
   const filteredTickets = filterTickets(tickets, {
@@ -21,8 +21,16 @@ const TicketsPage = () => {
     currentUser: CURRENT_USER,
   });
 
-  const handleCreateTicket = (ticket: Ticket) => {
-    setTickets((prev) => [ticket, ...prev]);
+  const handleCreateTicket = (formTicket: FormTicket) => {
+    const newTicket: Ticket = {
+      ...formTicket,
+      assignee: CURRENT_USER,
+      reactionTime: "",
+      solution: "",
+      status: "new",
+    };
+
+    setTickets((prev) => [newTicket, ...prev]);
   };
 
   return (
@@ -45,7 +53,7 @@ const TicketsPage = () => {
       </Stack>
 
       <CreateTicketModal
-        open={isCreateOpen}
+        open={createOpen}
         onClose={() => setCreateOpen(false)}
         onCreate={handleCreateTicket}
       />

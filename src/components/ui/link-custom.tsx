@@ -1,14 +1,9 @@
-import { Link } from "@chakra-ui/react";
+import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 
-interface LinkProps {
-  href: string;
-  children: string;
-}
-
-import { chakra } from "@chakra-ui/react";
+type LinkCustomProps = HTMLChakraProps<"a">;
 
 const StyledLink = chakra("a", {
-  baseStyle: {
+  base: {
     display: "flex",
     alignItems: "center",
     gap: 2,
@@ -19,8 +14,12 @@ const StyledLink = chakra("a", {
   },
 });
 
-const LinkCustom = ({ href, children }: LinkProps) => {
-  return <StyledLink href={href}>{children}</StyledLink>;
+const LinkCustom = ({ href, children, ...props }: LinkCustomProps) => {
+  return (
+    <StyledLink href={href} {...props}>
+      {children}
+    </StyledLink>
+  );
 };
 
 export default LinkCustom;

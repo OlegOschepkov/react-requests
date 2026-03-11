@@ -1,5 +1,3 @@
-// components/ui/CustomSelect.tsx
-import { useState } from "react";
 import {
   Select,
   createListCollection,
@@ -7,7 +5,6 @@ import {
   Box,
   Flex,
   Text,
-  Badge,
 } from "@chakra-ui/react";
 import { ChevronDown } from "lucide-react";
 

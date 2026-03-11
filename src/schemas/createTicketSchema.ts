@@ -3,7 +3,7 @@ import {
   ALLOWED_FILE_TYPES,
   MAX_FILE_SIZE_MB,
   MAX_FILES,
-} from "@/mockData/ticketStatuses.ts";
+} from "@/mockData/mockData.ts";
 
 export const createTicketSchema = z.object({
   locId: z.string().min(1, "Выберите аптеку"),

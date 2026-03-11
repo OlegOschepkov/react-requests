@@ -18,7 +18,7 @@ import {
   createTicketSchema,
 } from "@/schemas/createTicketSchema";
 
-import type { FormTicket, Ticket } from "@/types/ticket";
+import type { FormTicket } from "@/types/ticket";
 
 import {
   CATEGORY_LABELS,
@@ -61,8 +61,12 @@ const CreateTicketModal = ({
       ...data,
     });
 
-    const selectedLoc = formLocValues.find((loc) => loc.id == data.locId);
-    const selectedCat = formLocValues.find((loc) => loc.id == data.locId);
+    const selectedLoc = formLocValues.find((loc) => loc.id === data.locId);
+
+    if (!selectedLoc) {
+      console.error("Локация не найдена");
+      return;
+    }
 
     const newTicket: FormTicket = {
       id: `T-${Date.now()}`,
@@ -74,10 +78,6 @@ const CreateTicketModal = ({
       status: "new",
       createdAt: formatCreatedAt(),
     };
-
-    console.log("Создан newTicket:", {
-      ...newTicket,
-    });
 
     onCreate(newTicket);
 
@@ -99,7 +99,7 @@ const CreateTicketModal = ({
             <Dialog.Body>
               <VStack gap={4}>
                 {/* Аптека */}
-                <Field.Root invalid={!!errors.loc}>
+                <Field.Root invalid={!!errors.locId}>
                   <Field.Label>Аптека</Field.Label>
 
                   <NativeSelect.Root>
@@ -116,7 +116,7 @@ const CreateTicketModal = ({
                     <NativeSelect.Indicator />
                   </NativeSelect.Root>
 
-                  <Field.ErrorText>{errors.loc?.message}</Field.ErrorText>
+                  <Field.ErrorText>{errors.locId?.message}</Field.ErrorText>
                 </Field.Root>
 
                 {/* Тема */}

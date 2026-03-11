@@ -108,17 +108,19 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {tickets.length === 0 ? (
-              hasFilters ? (
-                <TicketTableEmptyState
-                  message="Ничего не найдено"
-                  description="Попробуйте изменить фильтры"
-                />
-              ) : (
-                <TicketTableEmptyState message="Нет заявок" />
-              )
-            ) : (
-              filteredTickets.map((ticket) => (
+            {(() => {
+              if (tickets.length === 0) {
+                const emptyProps = hasFilters
+                  ? {
+                      message: "Ничего не найдено",
+                      description: "Попробуйте изменить фильтры",
+                    }
+                  : { message: "Нет заявок" };
+
+                return <TicketTableEmptyState {...emptyProps} />;
+              }
+
+              return filteredTickets.map((ticket) => (
                 <Table.Row key={ticket.id} _hover={{ bg: "gray.50" }}>
                   {ticketColumns.map((column) => (
                     <Table.Cell key={column.key}>
@@ -126,8 +128,8 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
                     </Table.Cell>
                   ))}
                 </Table.Row>
-              ))
-            )}
+              ));
+            })()}
           </Table.Body>
         </Table.Root>
       </Box>

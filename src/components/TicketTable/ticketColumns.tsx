@@ -4,19 +4,26 @@ import {
   CATEGORY_LABELS,
   PRIORITY_LABELS,
   STATUS_LABELS,
-  statusMap,
 } from "@/mockData/mockData.ts";
 import React from "react";
 import StatusBadge from "@/components/TicketTable/StatusBadge";
 import PriorityBadge from "@/components/TicketTable/PriorityBadge.tsx";
 
-type Column<Ticket> = {
-  key: keyof Ticket;
-  header: string;
-  render: (ticket: Ticket) => React.ReactNode;
-  filterType?: "select";
-  options?: Record<string, string>;
-};
+type Column<Ticket> =
+  | {
+      key: keyof Ticket;
+      header: string;
+      render: (row: Ticket) => React.ReactNode;
+      filterType?: undefined;
+      options?: undefined;
+    }
+  | {
+      key: keyof Ticket;
+      header: string;
+      render: (row: Ticket) => React.ReactNode;
+      filterType: "select";
+      options: Record<string, string>;
+    };
 
 export const ticketColumns: Column<Ticket>[] = [
   {
@@ -53,22 +60,14 @@ export const ticketColumns: Column<Ticket>[] = [
     header: "Приоритет",
     filterType: "select",
     options: PRIORITY_LABELS,
-    render: (ticket: Ticket) => (
-      <>
-        <PriorityBadge status={ticket.priority} />
-      </>
-    ),
+    render: (ticket: Ticket) => <PriorityBadge status={ticket.priority} />,
   },
   {
     key: "status",
     header: "Статус",
-    render: (ticket: Ticket) => (
-      <>
-        <StatusBadge status={ticket.status} />
-      </>
-    ),
     filterType: "select",
     options: STATUS_LABELS,
+    render: (ticket: Ticket) => <StatusBadge status={ticket.status} />,
   },
   {
     key: "createdAt",
