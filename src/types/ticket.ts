@@ -18,7 +18,7 @@ export type Category =
 
 export type PriorityStatus = "low" | "medium" | "high" | "critical";
 
-export interface Ticket {
+export interface FormTicket {
   id: string;
   loc: {
     id: string;
@@ -32,26 +32,18 @@ export interface Ticket {
   priority: PriorityStatus;
   about: string;
   category: Category;
+  status: TicketStatus;
+  warranty?: boolean;
+  description?: string;
+}
+
+export type Ticket = FormTicket & {
   assignee: string;
   reactionTime: string;
   solution: string;
-  status: TicketStatus;
-}
+};
 
-export interface FormTicket {
-  id: string;
-  loc: {
-    id: string;
-    name: string;
-  };
-  about: string;
-  status: TicketStatus;
-  category: string;
-  priority: string;
-  createdAt: {
-    date: string;
-    time: string;
-    dateTime: number; // in ms
-  };
-  description: string;
-}
+export type SelectOption = {
+  value: string;
+  label: React.ReactNode;
+};

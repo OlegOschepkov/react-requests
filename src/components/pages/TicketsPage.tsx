@@ -1,13 +1,13 @@
 import { Stack, VStack } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
-import TicketsFilters from "@/components/features/tickets/TicketsFilters.tsx";
-import TicketTable from "@/components/TicketTable/TicketTable.tsx";
+import TicketsFilters from "@/components/tickets/TicketFilters/TicketsFilters.tsx";
+import TicketTable from "@/components/tickets/TicketTable/TicketTable.tsx";
 import { CURRENT_USER, mockTickets } from "@/mockData/mockData.ts";
 import { useState } from "react";
 import type { FormTicket, Ticket, TicketStatus } from "@/types/ticket.ts";
-import TicketToolbar from "@/components/TicketToolbar/TicketToolbar.tsx";
+import TicketToolbar from "@/components/tickets/TicketToolbar/TicketToolbar.tsx";
 import filterTickets from "@/utils/filterTickets.tsx";
-import CreateTicketModal from "@/components/features/tickets/CreateTicketModal.tsx";
+import CreateTicketModal from "@/components/tickets/CreateTicketModal/CreateTicketModal.tsx";
 
 const TicketsPage = () => {
   const [ticketFilter, setTicketFilter] = useState<TicketStatus | "all">("all");

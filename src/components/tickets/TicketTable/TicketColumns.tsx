@@ -1,4 +1,4 @@
-import type { Ticket } from "@/types/ticket";
+import type { Ticket } from "@/types/ticket.ts";
 import { Text } from "@chakra-ui/react";
 import {
   CATEGORY_LABELS,
@@ -6,8 +6,8 @@ import {
   STATUS_LABELS,
 } from "@/mockData/mockData.ts";
 import React from "react";
-import StatusBadge from "@/components/TicketTable/StatusBadge";
-import PriorityBadge from "@/components/TicketTable/PriorityBadge.tsx";
+import StatusBadge from "@/components/tickets/TicketTable/StatusBadge.tsx";
+import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
 
 type Column<Ticket> =
   | {
@@ -44,6 +44,19 @@ export const ticketColumns: Column<Ticket>[] = [
     ),
   },
   {
+    key: "createdAt",
+    header: "Создана",
+    render: (ticket: Ticket) =>
+      `${ticket.createdAt.date} ${ticket.createdAt.time}`,
+  },
+  {
+    key: "priority",
+    header: "Приоритет",
+    filterType: "select",
+    options: PRIORITY_LABELS,
+    render: (ticket: Ticket) => <PriorityBadge status={ticket.priority} />,
+  },
+  {
     key: "about",
     header: "Описание",
     render: (ticket: Ticket) => ticket.about,
@@ -56,11 +69,19 @@ export const ticketColumns: Column<Ticket>[] = [
     options: CATEGORY_LABELS,
   },
   {
-    key: "priority",
-    header: "Приоритет",
-    filterType: "select",
-    options: PRIORITY_LABELS,
-    render: (ticket: Ticket) => <PriorityBadge status={ticket.priority} />,
+    key: "assignee",
+    header: "Создана",
+    render: (ticket: Ticket) => ticket.assignee,
+  },
+  {
+    key: "reactionTime",
+    header: "Реакция",
+    render: (ticket: Ticket) => ticket.reactionTime,
+  },
+  {
+    key: "solution",
+    header: "Решение",
+    render: (ticket: Ticket) => ticket.solution,
   },
   {
     key: "status",
@@ -68,11 +89,5 @@ export const ticketColumns: Column<Ticket>[] = [
     filterType: "select",
     options: STATUS_LABELS,
     render: (ticket: Ticket) => <StatusBadge status={ticket.status} />,
-  },
-  {
-    key: "createdAt",
-    header: "Создана",
-    render: (ticket: Ticket) =>
-      `${ticket.createdAt.date} ${ticket.createdAt.time}`,
   },
 ];

@@ -1,6 +1,6 @@
 import { Table, Skeleton, Box, IconButton } from "@chakra-ui/react";
 import { ROWS } from "@/mockData/mockData.ts";
-import { ticketColumns } from "@/components/TicketTable/ticketColumns.tsx";
+import { ticketColumns } from "@/components/tickets/TicketTable/TicketColumns.tsx";
 import { LuFilter } from "react-icons/lu";
 
 const TicketTableSkeleton = () => {

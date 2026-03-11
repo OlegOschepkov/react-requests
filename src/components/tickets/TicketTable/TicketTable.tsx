@@ -1,11 +1,11 @@
 import { Table, Box } from "@chakra-ui/react";
 import type { Ticket } from "@/types/ticket.ts";
 import { useEffect, useState } from "react";
-import ColumnFilter from "@/components/ColumnFilter/ColumnFilter.tsx";
+import ColumnFilter from "@/components/tickets/ColumnFilter/ColumnFilter.tsx";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-import TicketTableSkeleton from "@/components/TicketTable/TicketTableSkeleton.tsx";
-import TicketTableEmptyState from "@/components/TicketTable/TicketTableEmptyState.tsx";
-import { ticketColumns } from "@/components/TicketTable/ticketColumns.tsx";
+import TicketTableSkeleton from "@/components/tickets/TicketTable/TicketTableSkeleton.tsx";
+import TicketTableEmptyState from "@/components/tickets/TicketTable/TicketTableEmptyState.tsx";
+import { ticketColumns } from "@/components/tickets/TicketTable/TicketColumns.tsx";
 
 interface TicketTableProps {
   tickets: Ticket[];
