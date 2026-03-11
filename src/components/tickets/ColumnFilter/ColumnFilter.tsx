@@ -2,12 +2,12 @@ import {
   Popover,
   Portal,
   Input,
-  Button,
   VStack,
   IconButton,
   NativeSelect,
 } from "@chakra-ui/react";
 import { LuFilter } from "react-icons/lu";
+import ButtonCustom from "@/components/ui/button-custom.tsx";
 
 interface ColumnFilterProps {
   value: string;
@@ -66,9 +66,9 @@ const ColumnFilter = ({
                 </NativeSelect.Root>
               )}
 
-              <Button size="sm" onClick={onReset}>
+              <ButtonCustom size="sm" onClick={onReset}>
                 Сбросить
-              </Button>
+              </ButtonCustom>
             </VStack>
           </Popover.Content>
         </Popover.Positioner>

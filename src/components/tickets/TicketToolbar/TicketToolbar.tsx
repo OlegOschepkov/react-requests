@@ -1,4 +1,6 @@
-import { HStack, Input, Button, InputGroup } from "@chakra-ui/react";
+import { HStack, Input, InputGroup } from "@chakra-ui/react";
+import ButtonCustom from "@/components/ui/button-custom.tsx";
+import { LuFileText, LuPlus } from "react-icons/lu";
 
 interface Props {
   search: string;
@@ -18,11 +20,15 @@ const TicketToolbar = ({ search, onSearchChange, onCreateClick }: Props) => {
       </InputGroup>
 
       <HStack>
-        <Button variant="outline">Экспорт</Button>
+        <ButtonCustom variant="base" gap="12px">
+          <LuFileText />
+          Экспорт
+        </ButtonCustom>
 
-        <Button colorScheme="blackAlpha" onClick={onCreateClick}>
-          Новая заявка
-        </Button>
+        <ButtonCustom variant="dark" gap="12px" onClick={onCreateClick}>
+          <LuPlus />
+          Создать новую заявку
+        </ButtonCustom>
       </HStack>
     </HStack>
   );

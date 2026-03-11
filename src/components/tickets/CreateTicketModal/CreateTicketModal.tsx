@@ -1,7 +1,6 @@
 import {
   Dialog,
   Portal,
-  Button,
   Input,
   Field,
   VStack,
@@ -28,6 +27,7 @@ import {
 import { mapRecordToOptions } from "@/hooks/mapRecordToOptions.ts";
 import { formatCreatedAt } from "@/utils/dateFormat.ts";
 import FormSelect from "@/components/tickets/CreateTicketModal/FormSelect.tsx";
+import ButtonCustom from "@/components/ui/button-custom.tsx";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -54,7 +54,7 @@ const CreateTicketModal = ({
       status: "new",
       files: [],
       locId: "",
-      category: "cashbox",
+      category: "",
       priority: "medium",
       warranty: false,
     },
@@ -204,13 +204,16 @@ const CreateTicketModal = ({
             </Dialog.Body>
 
             <Dialog.Footer>
-              <Button variant="outline" onClick={onClose}>
+              <ButtonCustom variant="outline" onClick={onClose}>
                 Отмена
-              </Button>
+              </ButtonCustom>
 
-              <Button colorScheme="blackAlpha" onClick={handleSubmit(onSubmit)}>
+              <ButtonCustom
+                colorScheme="blackAlpha"
+                onClick={handleSubmit(onSubmit)}
+              >
                 Создать
-              </Button>
+              </ButtonCustom>
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

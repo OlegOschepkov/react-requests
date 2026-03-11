@@ -4,6 +4,7 @@ export const colors = {
   grey: {
     50: { value: "#F1F1F1" },
     100: { value: "#D9E1EC" },
+    200: { value: "#B0B0B0" },
     700: { value: "#1C1C1C" },
   },
   green: {

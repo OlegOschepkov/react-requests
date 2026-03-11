@@ -1,5 +1,6 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 import { colors } from "./colors";
+import { linkRecipe } from "@/theme/recipes/link.recipe.ts";
 
 const system = createSystem(defaultConfig, {
   theme: {
@@ -13,6 +14,9 @@ const system = createSystem(defaultConfig, {
           value: "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif",
         },
       },
+    },
+    recipes: {
+      link: linkRecipe,
     },
   },
 });
