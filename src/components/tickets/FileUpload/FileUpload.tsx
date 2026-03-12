@@ -19,7 +19,7 @@ import { LuPlus } from "react-icons/lu";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;
-  onError?: (error: string | null) => void;
+  onError?: (error?: string) => void;
 }
 
 const FileUploadComponent = ({ onChange, onError }: FileUploadProps) => {

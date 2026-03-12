@@ -1,17 +1,17 @@
-import { Table, useBreakpointValue, VStack } from "@chakra-ui/react";
+import { Table, VStack } from "@chakra-ui/react";
 import CustomText from "@/components/ui/custom-text.tsx";
 
 type TicketTableEmptyStateProps = {
   message: string;
   description?: string;
+  isMobile?: boolean;
 };
 
 const TicketTableEmptyState = ({
   message,
   description,
+  isMobile = false,
 }: TicketTableEmptyStateProps) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   if (isMobile) {
     return (
       <VStack py={10} gap={1}>

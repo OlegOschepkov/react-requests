@@ -84,7 +84,7 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
             }
           : { message: "Нет заявок" };
 
-      return <TicketTableEmptyState {...emptyProps} />;
+      return <TicketTableEmptyState {...emptyProps} isMobile={isMobile} />;
     }
 
     return (
@@ -214,7 +214,9 @@ const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {
                       }
                     : { message: "Нет заявок" };
 
-                return <TicketTableEmptyState {...emptyProps} />;
+                return (
+                  <TicketTableEmptyState {...emptyProps} isMobile={isMobile} />
+                );
               }
 
               return filteredTickets.map((ticket) => (

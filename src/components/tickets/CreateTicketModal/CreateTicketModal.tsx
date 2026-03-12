@@ -15,7 +15,11 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-
+import {
+  categoryOptions,
+  priorityOptions,
+  locOptions,
+} from "./createTicketOptions";
 import FileUploadComponent from "@/components/tickets/FileUpload/FileUpload.tsx";
 
 import {
@@ -37,6 +41,9 @@ import ButtonCustom from "@/components/ui/button-custom.tsx";
 import CustomText from "@/components/ui/custom-text.tsx";
 import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
 import { LuArrowLeft, LuX } from "react-icons/lu";
+import { createTicketFromForm } from "@/components/tickets/CreateTicketModal/useCreateTicketSubmit.tsx";
+import DescriptionPlaceholder from "@/components/tickets/CreateTicketModal/DescriptionPlaceholder.tsx";
+import FileUploadField from "@/components/tickets/CreateTicketModal/FileUploadField.tsx";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -72,63 +79,15 @@ const CreateTicketModal = ({
     },
   });
 
-  const categoryOptions = mapRecordToOptions(CATEGORY_LABELS);
-  const priorityOptions = mapRecordToOptions(PRIORITY_LABELS).map((label) => ({
-    value: label.value,
-    label: <PriorityBadge status={label.value} variant="select" />,
-  }));
-
-  const locOptions = formLocValues.map((loc) => ({
-    value: loc.id,
-    label: (
-      <Box>
-        <CustomText
-          as="span"
-          bg="grey.50"
-          borderRadius="4px"
-          fontWeight="600"
-          letterSpacing="8%"
-          padding="1px 3px"
-          marginRight="9px"
-        >
-          {loc.id}
-        </CustomText>
-        {loc.name}
-      </Box>
-    ),
-  }));
-
   const onSubmit = (data: CreateTicketForm) => {
     try {
-      console.log("Создан тикет:", {
-        ...data,
-      });
+      const ticket = createTicketFromForm(data);
 
-      const selectedLoc = formLocValues.find((loc) => loc.id === data.locId);
-
-      if (!selectedLoc) {
-        console.error("Локация не найдена");
-        return;
-      }
-
-      const newTicket: FormTicket = {
-        id: `T-${Date.now()}`.slice(-4),
-        loc: selectedLoc,
-        about: data.about,
-        category: data.category,
-        priority: data.priority,
-        description: data.description,
-        status: "new",
-        warranty: data.warranty,
-        createdAt: formatCreatedAt(),
-      };
-
-      onCreate(newTicket);
-
+      onCreate(ticket);
       reset();
       onClose();
     } catch (error) {
-      console.error("Ошибка при создании заявки:", error);
+      console.error(error);
     }
   };
 
@@ -328,53 +287,7 @@ const CreateTicketModal = ({
                       onBlur={() => setIsFocused(false)}
                     />
 
-                    {showAboutPlaceholder && (
-                      <Box
-                        position="absolute"
-                        left="16px"
-                        top="33px"
-                        pointerEvents="none"
-                      >
-                        <CustomText variant="p2" color="grey.200">
-                          Кратко опишите проблему:
-                        </CustomText>
-
-                        <List.Root margin="16px 0 0 23px" gap="3px">
-                          <CustomText
-                            as="li"
-                            variant="p2"
-                            color="grey.200"
-                            lineHeight="100%"
-                          >
-                            что случилось?
-                          </CustomText>
-                          <CustomText
-                            as="li"
-                            variant="p2"
-                            color="grey.200"
-                            lineHeight="100%"
-                          >
-                            дата и время произошедшего?
-                          </CustomText>
-                          <CustomText
-                            as="li"
-                            variant="p2"
-                            color="grey.200"
-                            lineHeight="100%"
-                          >
-                            сколько длится проблема?
-                          </CustomText>
-                          <CustomText
-                            as="li"
-                            variant="p2"
-                            color="grey.200"
-                            lineHeight="100%"
-                          >
-                            насколько она влияет на вашу работу?
-                          </CustomText>
-                        </List.Root>
-                      </Box>
-                    )}
+                    {showAboutPlaceholder && <DescriptionPlaceholder />}
 
                     <Field.ErrorText
                       color="red"
@@ -387,33 +300,10 @@ const CreateTicketModal = ({
 
                   {/* Файлы */}
                   {!isMobile && (
-                    <Controller
-                      name="files"
+                    <FileUploadField
                       control={control}
-                      render={({ field, fieldState }) => (
-                        <Field.Root invalid={!!fieldState.error}>
-                          <Field.Label fontSize="12px" lineHeight="100%">
-                            Прикрепите файлы
-                          </Field.Label>
-
-                          <FileUploadComponent
-                            onChange={(files) =>
-                              setValue("files", files, { shouldValidate: true })
-                            }
-                            onError={(message) =>
-                              setError("files", { message })
-                            }
-                          />
-
-                          <Field.ErrorText
-                            color="red"
-                            position="absolute"
-                            bottom="-15px"
-                          >
-                            {fieldState.error?.message}
-                          </Field.ErrorText>
-                        </Field.Root>
-                      )}
+                      setValue={setValue}
+                      setError={setError}
                     />
                   )}
                 </VStack>
@@ -426,31 +316,10 @@ const CreateTicketModal = ({
               flexDirection={{ base: "column", md: "row" }}
             >
               {isMobile && (
-                <Controller
-                  name="files"
+                <FileUploadField
                   control={control}
-                  render={({ field, fieldState }) => (
-                    <Field.Root invalid={!!fieldState.error}>
-                      <Field.Label fontSize="12px" lineHeight="100%">
-                        Прикрепите файлы
-                      </Field.Label>
-
-                      <FileUploadComponent
-                        onChange={(files) =>
-                          setValue("files", files, { shouldValidate: true })
-                        }
-                        onError={(message) => setError("files", { message })}
-                      />
-
-                      <Field.ErrorText
-                        color="red"
-                        position="absolute"
-                        bottom="-15px"
-                      >
-                        {fieldState.error?.message}
-                      </Field.ErrorText>
-                    </Field.Root>
-                  )}
+                  setValue={setValue}
+                  setError={setError}
                 />
               )}
 

@@ -107,6 +107,7 @@ const TicketsPage = () => {
           onCreateClick={handleCreateClick}
         />
 
+        {/* если убрать lazyMount unmountOnExit - то могут быть тормоза */}
         <Tabs.Root defaultValue="all" lazyMount unmountOnExit>
           <Tabs.List
             gap="8px"
