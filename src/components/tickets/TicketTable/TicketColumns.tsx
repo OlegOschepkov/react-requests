@@ -1,5 +1,5 @@
 import type { Ticket } from "@/types/ticket.ts";
-import { Text } from "@chakra-ui/react";
+
 import {
   CATEGORY_LABELS,
   PRIORITY_LABELS,
@@ -8,6 +8,8 @@ import {
 import React from "react";
 import StatusBadge from "@/components/tickets/TicketTable/StatusBadge.tsx";
 import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
+import ReactionBadge from "@/components/tickets/TicketTable/ReactionBadge.tsx";
+import CustomText from "@/components/ui/custom-text.tsx";
 
 type Column<Ticket> =
   | {
@@ -28,17 +30,25 @@ type Column<Ticket> =
 export const ticketColumns: Column<Ticket>[] = [
   {
     key: "id",
-    header: "ID",
+    header: "№",
     render: (ticket: Ticket) => ticket.id,
   },
   {
     key: "loc",
-    header: "Локация",
+    header: "Аптека",
     render: (ticket: Ticket) => (
       <>
-        <Text as="span" bg="red">
+        <CustomText
+          as="span"
+          bg="grey.50"
+          borderRadius="4px"
+          fontWeight="600"
+          letterSpacing="8%"
+          padding="1px 3px"
+          marginRight="9px"
+        >
           {ticket.loc.id}
-        </Text>{" "}
+        </CustomText>
         {ticket.loc.name}
       </>
     ),
@@ -46,8 +56,14 @@ export const ticketColumns: Column<Ticket>[] = [
   {
     key: "createdAt",
     header: "Создана",
-    render: (ticket: Ticket) =>
-      `${ticket.createdAt.date} ${ticket.createdAt.time}`,
+    render: (ticket: Ticket) => (
+      <CustomText as="span" variant="p">
+        {ticket.createdAt.date}{" "}
+        <CustomText as="span" color="grey.200">
+          {ticket.createdAt.time}
+        </CustomText>
+      </CustomText>
+    ),
   },
   {
     key: "priority",
@@ -58,7 +74,7 @@ export const ticketColumns: Column<Ticket>[] = [
   },
   {
     key: "about",
-    header: "Описание",
+    header: "Тема",
     render: (ticket: Ticket) => ticket.about,
   },
   {
@@ -70,18 +86,40 @@ export const ticketColumns: Column<Ticket>[] = [
   },
   {
     key: "assignee",
-    header: "Создана",
-    render: (ticket: Ticket) => ticket.assignee,
+    header: "Техник",
+    render: (ticket: Ticket) =>
+      ticket.assignee?.length > 2 ? (
+        ticket.assignee
+      ) : (
+        <CustomText as="span" color="grey.100">
+          &#8213;
+        </CustomText>
+      ),
   },
   {
     key: "reactionTime",
     header: "Реакция",
-    render: (ticket: Ticket) => ticket.reactionTime,
+    render: (ticket: Ticket) => (
+      <ReactionBadge
+        status={ticket.reactionStatus ? ticket.reactionStatus : "ok"}
+        label={ticket.reactionTime}
+      />
+    ),
   },
   {
     key: "solution",
     header: "Решение",
-    render: (ticket: Ticket) => ticket.solution,
+    render: (ticket: Ticket) =>
+      ticket.solution?.length > 2 ? (
+        <ReactionBadge
+          status={ticket.solutionStatus ? ticket.solutionStatus : "ok"}
+          label={ticket.solution}
+        />
+      ) : (
+        <CustomText as="span" color="grey.100">
+          &#8213;
+        </CustomText>
+      ),
   },
   {
     key: "status",

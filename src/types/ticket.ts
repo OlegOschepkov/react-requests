@@ -17,6 +17,7 @@ export type Category =
   | "sanitary";
 
 export type PriorityStatus = "low" | "medium" | "high" | "critical";
+export type ReactionStatus = "ok" | "in_progress" | "alert";
 
 export interface FormTicket {
   id: string;
@@ -41,6 +42,8 @@ export type Ticket = FormTicket & {
   assignee: string;
   reactionTime: string;
   solution: string;
+  reactionStatus?: ReactionStatus;
+  solutionStatus?: ReactionStatus;
 };
 
 export type SelectOption = {

@@ -4,9 +4,9 @@ import {
   Flex,
   Float,
   HStack,
-  Text,
   Menu,
   IconButton,
+  Icon,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
@@ -14,6 +14,7 @@ import LinkCustom from "@/components/ui/link-custom.tsx";
 import { MenuIcon } from "lucide-react";
 import { LuLogOut, LuTriangle } from "react-icons/lu";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
+import CustomText from "@/components/ui/custom-text.tsx";
 
 const Header = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -21,7 +22,11 @@ const Header = () => {
   return (
     <Box borderBottom="1px solid" borderColor={"grey.100"}>
       <PageContainer>
-        <HStack align="center" justify="space-between">
+        <HStack
+          align="center"
+          justify="space-between"
+          py={{ md: "16px", lg: "22px" }}
+        >
           {isMobile ? (
             <Menu.Root>
               <Menu.Trigger asChild>
@@ -47,7 +52,7 @@ const Header = () => {
               </Menu.Positioner>
             </Menu.Root>
           ) : (
-            <HStack gap="35px">
+            <HStack gap="35px" mx="90px 0">
               <HStack gap="14px">
                 <LinkCustom href="#" variant={"current"}>
                   Заявки
@@ -61,8 +66,8 @@ const Header = () => {
                 <Menu.Trigger asChild>
                   <IconButton
                     variant="ghost"
-                    gap={"4px"}
-                    outline={"none"}
+                    gap="4px"
+                    outline="none"
                     _hover={{
                       bgColor: "transparent",
                     }}
@@ -70,7 +75,12 @@ const Header = () => {
                     <LinkCustom as="p" variant={"menu"}>
                       Справочники
                     </LinkCustom>
-                    <LuTriangle fill={"inherit"} size={8} />
+                    <Icon
+                      as={LuTriangle}
+                      fill="inherit"
+                      boxSize="7px"
+                      transform="rotate(180deg)"
+                    />
                   </IconButton>
                 </Menu.Trigger>
 
@@ -93,11 +103,11 @@ const Header = () => {
             </HStack>
           )}
 
-          <HStack gap="18px">
-            <Avatar.Root>
+          <HStack gap="25px">
+            <Avatar.Root my="-3px 0">
               <Avatar.Fallback name="Анна Иванова" />
-              <Avatar.Image src="/user-avatar.png" />
-              <Float placement="bottom-end" offsetX="1" offsetY="1">
+              <Avatar.Image w="35px" h="35px" src="/user-avatar.png" />
+              <Float placement="bottom-end" offsetX="1" offsetY="2">
                 <Flex
                   alignItems="center"
                   justifyContent="center"
@@ -106,14 +116,15 @@ const Header = () => {
                   height="20px"
                   borderRadius="50%"
                 >
-                  <Text color="white" fontSize="13px" lineHeight="100%">
+                  <CustomText color="white" variant="p" lineHeight="100%">
                     2
-                  </Text>
+                  </CustomText>
                 </Flex>
               </Float>
             </Avatar.Root>
-            <ButtonCustom gap="4px" variant={"base"}>
-              <LuLogOut /> Выйти
+            <ButtonCustom gap="4px">
+              <Icon as={LuLogOut} boxSize="20px" />
+              Выйти
             </ButtonCustom>
           </HStack>
         </HStack>

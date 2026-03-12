@@ -17,4 +17,5 @@ export const colors = {
     100: { value: "#CC892A" },
   },
   purple: { value: "#F0CDFA" },
+  blue: { value: "#2D60ED" },
 };

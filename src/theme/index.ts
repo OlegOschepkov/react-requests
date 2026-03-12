@@ -1,6 +1,5 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 import { colors } from "./colors";
-import { linkRecipe } from "@/theme/recipes/link.recipe.ts";
 
 const system = createSystem(defaultConfig, {
   theme: {
@@ -15,8 +14,68 @@ const system = createSystem(defaultConfig, {
         },
       },
     },
+
     recipes: {
-      link: linkRecipe,
+      field: {
+        base: {
+          gap: "10px",
+          bg: "red !important",
+        },
+      },
+
+      input: {
+        base: {
+          fontSize: "14px",
+          lineHeight: "24px",
+          borderRadius: "6px",
+          bg: "white",
+        },
+
+        variants: {
+          variant: {
+            outline: {
+              borderColor: "grey.200",
+              transition: "border-color 0.2s",
+
+              _hover: {
+                borderColor: "grey.700",
+              },
+
+              _focus: {
+                borderColor: "grey.700",
+                boxShadow: "none",
+              },
+            },
+          },
+        },
+      },
+
+      textarea: {
+        base: {
+          fontSize: "14px",
+          lineHeight: "24px",
+          borderRadius: "6px",
+          bg: "white",
+        },
+
+        variants: {
+          variant: {
+            outline: {
+              borderColor: "grey.200",
+              transition: "border-color 0.2s",
+
+              _hover: {
+                borderColor: "grey.700",
+              },
+
+              _focus: {
+                borderColor: "grey.700",
+                boxShadow: "none",
+              },
+            },
+          },
+        },
+      },
     },
   },
 });

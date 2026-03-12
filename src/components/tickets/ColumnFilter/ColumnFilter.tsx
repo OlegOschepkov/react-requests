@@ -5,8 +5,9 @@ import {
   VStack,
   IconButton,
   NativeSelect,
+  Icon,
 } from "@chakra-ui/react";
-import { LuFilter } from "react-icons/lu";
+import { LuFilter, LuTriangle } from "react-icons/lu";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
 
 interface ColumnFilterProps {
@@ -27,13 +28,15 @@ const ColumnFilter = ({
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <IconButton
-          aria-label="filter"
-          size="xs"
-          variant={value ? "solid" : "ghost"}
-        >
-          <LuFilter />
-        </IconButton>
+        <Icon as={LuFilter} fill={value ? "solid" : "ghost"} boxSize="14px" />
+
+        {/*<IconButton*/}
+        {/*  aria-label="filter"*/}
+        {/*  boxSize="10px"*/}
+        {/*  variant={value ? "solid" : "ghost"}*/}
+        {/*>*/}
+        {/*  <LuFilter />*/}
+        {/*</IconButton>*/}
       </Popover.Trigger>
 
       <Portal>
@@ -66,9 +69,7 @@ const ColumnFilter = ({
                 </NativeSelect.Root>
               )}
 
-              <ButtonCustom size="sm" onClick={onReset}>
-                Сбросить
-              </ButtonCustom>
+              <ButtonCustom onClick={onReset}>Сбросить</ButtonCustom>
             </VStack>
           </Popover.Content>
         </Popover.Positioner>

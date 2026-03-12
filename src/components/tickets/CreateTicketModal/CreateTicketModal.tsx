@@ -1,14 +1,19 @@
 import {
   Dialog,
   Portal,
-  Input,
   Field,
   VStack,
-  Text,
   Checkbox,
+  HStack,
+  Box,
+  Textarea,
+  List,
+  IconButton,
+  Icon,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 import FileUploadComponent from "@/components/tickets/FileUpload/FileUpload.tsx";
 
@@ -28,6 +33,9 @@ import { mapRecordToOptions } from "@/hooks/mapRecordToOptions.ts";
 import { formatCreatedAt } from "@/utils/dateFormat.ts";
 import FormSelect from "@/components/tickets/CreateTicketModal/FormSelect.tsx";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
+import CustomText from "@/components/ui/custom-text.tsx";
+import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
+import { LuTriangle, LuX } from "react-icons/lu";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -40,6 +48,8 @@ const CreateTicketModal = ({
   onClose,
   onCreate,
 }: CreateTicketModalProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -61,10 +71,29 @@ const CreateTicketModal = ({
   });
 
   const categoryOptions = mapRecordToOptions(CATEGORY_LABELS);
-  const priorityOptions = mapRecordToOptions(PRIORITY_LABELS);
+  const priorityOptions = mapRecordToOptions(PRIORITY_LABELS).map((label) => ({
+    value: label.value,
+    label: <PriorityBadge status={label.value} variant="select" />,
+  }));
+
   const locOptions = formLocValues.map((loc) => ({
     value: loc.id,
-    label: `${loc.id} — ${loc.name}`,
+    label: (
+      <Box>
+        <CustomText
+          as="span"
+          bg="grey.50"
+          borderRadius="4px"
+          fontWeight="600"
+          letterSpacing="8%"
+          padding="1px 3px"
+          marginRight="9px"
+        >
+          {loc.id}
+        </CustomText>
+        {loc.name}
+      </Box>
+    ),
   }));
 
   const onSubmit = (data: CreateTicketForm) => {
@@ -81,7 +110,7 @@ const CreateTicketModal = ({
       }
 
       const newTicket: FormTicket = {
-        id: `T-${Date.now()}`,
+        id: `T-${Date.now()}`.slice(-4),
         loc: selectedLoc,
         about: data.about,
         category: data.category,
@@ -101,118 +130,263 @@ const CreateTicketModal = ({
     }
   };
 
+  const aboutValue = watch("about");
+  const showAboutPlaceholder = !aboutValue && !isFocused;
+
   return (
-    <Dialog.Root open={open} onOpenChange={(e) => !e.open && onClose()}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(e) => !e.open && onClose()}
+      size={"lg"}
+      closeOnInteractOutside={false}
+    >
       <Portal>
         <Dialog.Backdrop />
 
         <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>Новая заявка</Dialog.Title>
+          <Dialog.Content maxW="1007px" w="full" borderRadius="15px">
+            <Dialog.Header padding="33px 37px">
+              <Dialog.CloseTrigger asChild>
+                <Box position="absolute" top="25px" right="33px">
+                  <IconButton
+                    aria-label="Close"
+                    variant="ghost"
+                    onClick={onClose}
+                  >
+                    <Icon as={LuX} boxSize="32px" />
+                  </IconButton>
+                </Box>
+              </Dialog.CloseTrigger>
+              <Dialog.Title fontWeight="500" fontSize="24px" lineHeight="100%">
+                Создание заявки
+              </Dialog.Title>
             </Dialog.Header>
 
-            <Dialog.Body>
-              <VStack gap={4} as="form" onSubmit={handleSubmit(onSubmit)}>
-                {/* Аптека */}
-                <Field.Root invalid={!!errors.locId}>
-                  <Field.Label>Аптека</Field.Label>
+            <Dialog.Body width="100%" padding="3px 37px">
+              <HStack
+                wrap="wrap"
+                gap="36px"
+                as="form"
+                align="top"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <VStack flex="300px" gap="54px">
+                  {/* Аптека */}
+                  <Field.Root invalid={!!errors.locId} gap="10px">
+                    <Field.Label fontSize="12px" lineHeight="100%">
+                      Аптека
+                    </Field.Label>
 
-                  <FormSelect<CreateTicketForm>
-                    name="locId"
-                    control={control}
-                    options={locOptions}
-                    placeholder="Выберите аптеку"
-                  />
+                    <FormSelect<CreateTicketForm>
+                      name="locId"
+                      control={control}
+                      options={locOptions}
+                      placeholder="Выберите аптеку от которой исходит заявка"
+                      minHeight="48px"
+                    />
 
-                  <Field.ErrorText>{errors.locId?.message}</Field.ErrorText>
-                </Field.Root>
+                    <Field.ErrorText
+                      color="red"
+                      position="absolute"
+                      bottom="-15px"
+                    >
+                      {errors.locId?.message}
+                    </Field.ErrorText>
+                  </Field.Root>
 
-                {/* Тема */}
-                <Field.Root invalid={!!errors.about}>
-                  <Field.Label>Тема</Field.Label>
+                  <VStack width="100%" gap="16px">
+                    {/* Категория */}
+                    <Field.Root invalid={!!errors.category} gap="10px">
+                      <Field.Label fontSize="12px" lineHeight="100%">
+                        Категория заявки
+                      </Field.Label>
 
-                  <Input {...register("about")} />
+                      <FormSelect<CreateTicketForm>
+                        name="category"
+                        control={control}
+                        options={categoryOptions}
+                        placeholder="Холодильники, кондиционеры или другое"
+                      />
 
-                  <Field.ErrorText>{errors.about?.message}</Field.ErrorText>
-                </Field.Root>
+                      <Field.ErrorText
+                        color="red"
+                        position="absolute"
+                        bottom="-15px"
+                      >
+                        {errors.category?.message}
+                      </Field.ErrorText>
+                    </Field.Root>
 
-                {/* Категория */}
-                <Field.Root invalid={!!errors.category}>
-                  <Field.Label>Категория заявки</Field.Label>
+                    {/* Гарантия */}
+                    <Field.Root>
+                      <Checkbox.Root
+                        checked={watch("warranty")}
+                        onCheckedChange={(e) =>
+                          setValue("warranty", !!e.checked)
+                        }
+                      >
+                        <Checkbox.HiddenInput />
+                        <Checkbox.Control />
+                        <Checkbox.Label>Гарантийный случай?</Checkbox.Label>
+                      </Checkbox.Root>
+                    </Field.Root>
+                  </VStack>
+                </VStack>
 
-                  <FormSelect<CreateTicketForm>
-                    name="category"
-                    control={control}
-                    options={categoryOptions}
-                    placeholder="Выберите категорию"
-                  />
+                <VStack flex="300px" gap="25px">
+                  {/* Тема с кастомным плейсхолдером */}
+                  <Field.Root invalid={!!errors.about} gap="10px">
+                    <Field.Label fontSize="12px" lineHeight="100%">
+                      Тема заявки
+                    </Field.Label>
 
-                  <Field.ErrorText>{errors.category?.message}</Field.ErrorText>
-                </Field.Root>
+                    <Textarea
+                      {...register("about")}
+                      height="70px"
+                      placeholder="Дайте заявке краткое название: например, сломался холодильник или не работает кондиционер"
+                    />
 
-                {/* Приоритет */}
-                <Field.Root invalid={!!errors.status}>
-                  <Field.Label>Приоритет</Field.Label>
+                    <Field.ErrorText
+                      color="red"
+                      position="absolute"
+                      bottom="-15px"
+                    >
+                      {errors.about?.message}
+                    </Field.ErrorText>
+                  </Field.Root>
 
-                  <FormSelect<CreateTicketForm>
-                    name="priority"
-                    control={control}
-                    options={priorityOptions}
-                    placeholder="Выберите приоритет"
-                  />
+                  {/* Приоритет */}
+                  <Field.Root invalid={!!errors.status} gap="10px">
+                    <Field.Label fontSize="12px" lineHeight="100%">
+                      Приоритет
+                    </Field.Label>
 
-                  <Field.ErrorText>{errors.status?.message}</Field.ErrorText>
-                </Field.Root>
+                    <FormSelect<CreateTicketForm>
+                      name="priority"
+                      control={control}
+                      options={priorityOptions}
+                      placeholder="Выберите приоритет"
+                    />
 
-                {/* Описание */}
-                <Field.Root invalid={!!errors.description}>
-                  <Field.Label>Описание</Field.Label>
+                    <Field.ErrorText
+                      color="red"
+                      position="absolute"
+                      bottom="-15px"
+                    >
+                      {errors.priority?.message}
+                    </Field.ErrorText>
+                  </Field.Root>
 
-                  <Input {...register("description")} />
+                  {/* Описание */}
+                  <Field.Root invalid={!!errors.description} gap="10px">
+                    <Field.Label fontSize="12px" lineHeight="100%">
+                      Описание проблемы
+                    </Field.Label>
 
-                  <Field.ErrorText>
-                    {errors.description?.message}
-                  </Field.ErrorText>
-                </Field.Root>
+                    <Textarea
+                      height="164px"
+                      {...register("description")}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                    />
 
-                {/* Гарантия */}
-                <Field.Root>
-                  <Checkbox.Root
-                    checked={watch("warranty")}
-                    onCheckedChange={(e) => setValue("warranty", !!e.checked)}
-                  >
-                    <Checkbox.HiddenInput />
-                    <Checkbox.Control />
-                    <Checkbox.Label>Гарантийный случай</Checkbox.Label>
-                  </Checkbox.Root>
-                </Field.Root>
+                    {showAboutPlaceholder && (
+                      <Box
+                        position="absolute"
+                        left="16px"
+                        top="33px"
+                        pointerEvents="none"
+                      >
+                        <CustomText variant="p1" color="grey.200">
+                          Кратко опишите проблему:
+                        </CustomText>
 
-                {/* Файлы */}
-                <Field.Root>
-                  <FileUploadComponent
-                    onChange={(files) =>
-                      setValue("files", files, { shouldValidate: true })
-                    }
-                  />
+                        <List.Root margin="16px 0 0 23px" gap="3px">
+                          <CustomText
+                            as="li"
+                            variant="p1"
+                            color="grey.200"
+                            lineHeight="100%"
+                          >
+                            {" "}
+                            что случилось?
+                          </CustomText>
+                          <CustomText
+                            as="li"
+                            variant="p1"
+                            color="grey.200"
+                            lineHeight="100%"
+                          >
+                            дата и время произошедшего?
+                          </CustomText>
+                          <CustomText
+                            as="li"
+                            variant="p1"
+                            color="grey.200"
+                            lineHeight="100%"
+                          >
+                            сколько длится проблема?
+                          </CustomText>
+                          <CustomText
+                            as="li"
+                            variant="p1"
+                            color="grey.200"
+                            lineHeight="100%"
+                          >
+                            насколько она влияет на вашу работу?
+                          </CustomText>
+                        </List.Root>
+                      </Box>
+                    )}
 
-                  {errors.files && (
-                    <Text color="red.500">{errors.files.message}</Text>
-                  )}
-                </Field.Root>
-              </VStack>
+                    <Field.ErrorText
+                      color="red"
+                      position="absolute"
+                      bottom="-15px"
+                    >
+                      {errors.description?.message}
+                    </Field.ErrorText>
+                  </Field.Root>
+
+                  {/* Файлы */}
+                  <Field.Root>
+                    <Field.Label fontSize="12px" lineHeight="100%">
+                      Прикрепите файлы
+                    </Field.Label>
+
+                    <FileUploadComponent
+                      onChange={(files) =>
+                        setValue("files", files, { shouldValidate: true })
+                      }
+                    />
+
+                    <Field.ErrorText
+                      color="red"
+                      position="absolute"
+                      bottom="-15px"
+                    >
+                      {errors.files?.message}
+                    </Field.ErrorText>
+                  </Field.Root>
+                </VStack>
+              </HStack>
             </Dialog.Body>
 
-            <Dialog.Footer>
-              <ButtonCustom variant="outline" onClick={onClose}>
-                Отмена
+            <Dialog.Footer p="34px 34px 38px 34px" justifyContent="start">
+              <ButtonCustom
+                variant="dark"
+                borderRadius="5px"
+                onClick={handleSubmit(onSubmit)}
+              >
+                Создать заявку
               </ButtonCustom>
 
               <ButtonCustom
-                colorScheme="blackAlpha"
-                onClick={handleSubmit(onSubmit)}
+                onClick={onClose}
+                variant="white"
+                borderRadius="5px"
               >
-                Создать
+                Отмена
               </ButtonCustom>
             </Dialog.Footer>
           </Dialog.Content>

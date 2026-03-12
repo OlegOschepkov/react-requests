@@ -1,11 +1,21 @@
-import { Box, Text, Image, HStack, CloseButton } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  HStack,
+  CloseButton,
+  VStack,
+  Icon,
+} from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { MAX_FILES } from "@/mockData/mockData.ts";
+import CustomText from "@/components/ui/custom-text.tsx";
+import { LuImage, LuTriangle } from "react-icons/lu";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;
+  error?: string;
+  invalid?: boolean;
 }
-
 const FileUploadComponent = ({ onChange }: FileUploadProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -56,18 +66,25 @@ const FileUploadComponent = ({ onChange }: FileUploadProps) => {
 
   return (
     <>
-      <Box
-        border="2px dashed"
-        borderColor="gray.300"
-        borderRadius="lg"
-        p={6}
-        textAlign="center"
+      <VStack
+        border="1px dashed"
+        borderColor="grey.200"
+        borderRadius="14px"
+        width="100%"
+        height="100px"
+        align="center"
+        justify="center"
+        gap="12px"
         cursor="pointer"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        <Text>Перетащите файлы сюда или нажмите для загрузки</Text>
+        <CustomText variant="p1" fontWeight="300">
+          Выберите или перетащите фото или файл
+        </CustomText>
+
+        <Icon as={LuImage} boxSize="20px" />
 
         <input
           ref={inputRef}
@@ -76,7 +93,7 @@ const FileUploadComponent = ({ onChange }: FileUploadProps) => {
           hidden
           onChange={handleInputChange}
         />
-      </Box>
+      </VStack>
 
       {previews.length > 0 && (
         <HStack wrap="wrap" mt={4}>

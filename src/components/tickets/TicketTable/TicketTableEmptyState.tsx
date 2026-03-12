@@ -1,4 +1,5 @@
-import { Table, Text, VStack } from "@chakra-ui/react";
+import { Table, VStack } from "@chakra-ui/react";
+import CustomText from "@/components/ui/custom-text.tsx";
 
 type TicketTableEmptyStateProps = {
   message: string;
@@ -11,13 +12,11 @@ const TicketTableEmptyState = ({
 }: TicketTableEmptyStateProps) => {
   return (
     <Table.Row>
-      <Table.Cell colSpan={5}>
+      <Table.Cell colSpan={10}>
         <VStack py={10} gap={1}>
-          <Text fontWeight="medium">{message}</Text>
+          <CustomText fontWeight="medium">{message}</CustomText>
           {description && (
-            <Text fontSize="sm" color="gray.500">
-              {description}
-            </Text>
+            <CustomText color="gray.500">{description}</CustomText>
           )}
         </VStack>
       </Table.Cell>

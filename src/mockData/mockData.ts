@@ -1,11 +1,20 @@
 import type {
   Category,
   PriorityStatus,
+  ReactionStatus,
   Ticket,
   TicketStatus,
 } from "@/types/ticket.ts";
-import { ChevronDown, ChevronsUp, ChevronUp, Diamond } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronsUp,
+  ChevronUp,
+  CircleAlert,
+  CircleCheck,
+  Clock4,
+  Diamond,
+  type LucideIcon,
+} from "lucide-react";
 
 // ===== ТИПЫ =====
 interface StatusMapItem {
@@ -15,6 +24,12 @@ interface StatusMapItem {
 
 interface PriorityStatusItem {
   label: string;
+  icon: LucideIcon;
+  color: string;
+  select: string;
+}
+
+interface ReactionStatusItem {
   icon: LucideIcon;
   color: string;
 }
@@ -31,6 +46,26 @@ interface TicketStatusOption {
 
 // ===== МОК-ДАННЫЕ =====
 const mockTickets: Ticket[] = [
+  {
+    id: "КС-0002",
+    loc: {
+      id: "065",
+      name: "Геленджик Островского 7",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "high",
+    about: "Поломка кассы",
+    category: "cashbox",
+    assignee: "",
+    reactionTime: "02:48",
+    solution: "",
+    status: "new",
+    reactionStatus: "in_progress",
+  },
   {
     id: "ХЛ-0002",
     loc: {
@@ -49,6 +84,103 @@ const mockTickets: Ticket[] = [
     reactionTime: "05:01",
     solution: "01:35:34",
     status: "in_progress",
+    solutionStatus: "in_progress",
+  },
+  {
+    id: "КН-0002",
+    loc: {
+      id: "045",
+      name: "Тимашевск Интернац 3Б",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "low",
+    about: "Конденсат на внутреннем блоке",
+    category: "conditioner",
+    assignee: "Максимов П.",
+    reactionTime: "05:01",
+    solution: "02:30:17",
+    status: "ready",
+  },
+  {
+    id: "ИЗ-0002",
+    loc: {
+      id: "164",
+      name: " РнД Сельмаш",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "critical",
+    about: "Нужно поверить гигрометр",
+    category: "measure",
+    assignee: "Алексеев М.",
+    reactionTime: "05:01",
+    solution: "02:30:17",
+    status: "ready",
+  },
+  {
+    id: "ПО-0002",
+    loc: {
+      id: "190",
+      name: "Геленджик Душистая 24",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "high",
+    about: "Заметили крыс у входа",
+    category: "room",
+    assignee: "Сидоров Е.",
+    reactionTime: "05:01",
+    solution: "02:30:17",
+    status: "closed",
+  },
+  {
+    id: "ИТ-0002",
+    loc: {
+      id: "267",
+      name: "Анапа Парковая 67к2",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "high",
+    about: "Нужен новый компьютер",
+    category: "it",
+    assignee: "Китов Я.",
+    reactionTime: "05:01",
+    solution: "02:30:17",
+    status: "closed",
+  },
+  {
+    id: "СА-0002",
+    loc: {
+      id: "150",
+      name: "Кореновск Красная 108",
+    },
+    createdAt: {
+      date: "20.07.2025",
+      time: "12:35:45",
+      dateTime: 1753000545000,
+    },
+    priority: "medium",
+    about: "Унитаз перестал смывать",
+    category: "sanitary",
+    assignee: "Малахов Н.",
+    reactionTime: "05:01",
+    solution: "02:30:17",
+    status: "ready",
+    solutionStatus: "alert",
   },
 ];
 
@@ -85,25 +217,51 @@ const ROWS = 5;
 const CURRENT_USER = "Олег";
 
 const MAX_FILES = 5;
-const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_MB = 1;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 // ===== МАППИНГИ ДЛЯ UI =====
 const statusMap: Record<TicketStatus, StatusMapItem> = {
-  new: { label: "Новая", color: "blue" },
+  new: { label: "Новая", color: "purple" },
   rejected: { label: "Отклонена", color: "red" },
-  review: { label: "На рассмотрении", color: "orange" },
-  in_progress: { label: "В работе", color: "purple" },
-  waiting_parts: { label: "Ожидает запчасти", color: "yellow" },
-  ready: { label: "Готово", color: "green" },
-  closed: { label: "Закрыта", color: "gray" },
+  review: { label: "На рассмотрении", color: "white" },
+  in_progress: { label: "В работе", color: "yellow.50" },
+  waiting_parts: { label: "Ожидает запчасти", color: "yellow.50" },
+  ready: { label: "Готово", color: "green.50" },
+  closed: { label: "Закрыта", color: "gray.50" },
 };
 
 const priorityStatuses: Record<PriorityStatus, PriorityStatusItem> = {
-  low: { label: "Низкий", icon: ChevronDown, color: "red" },
-  medium: { label: "Средний", icon: Diamond, color: "yellow.100" },
-  high: { label: "Высокий", icon: ChevronUp, color: "red" },
-  critical: { label: "Критич.", icon: ChevronsUp, color: "red" },
+  low: {
+    label: "Низкий",
+    icon: ChevronDown,
+    color: "blue",
+    select: "не влияет на эффективность и не стопорит",
+  },
+  medium: {
+    label: "Средний",
+    icon: Diamond,
+    color: "yellow.100",
+    select: "влияет на эффективность, но не стопорит",
+  },
+  high: {
+    label: "Высокий",
+    icon: ChevronUp,
+    color: "red",
+    select: "сильно влияет на эффективность, стопорит",
+  },
+  critical: {
+    label: "Критич.",
+    icon: ChevronsUp,
+    color: "red",
+    select: "Критично влияет на эффективность, работа остановлена!",
+  },
+};
+
+const reactionStatuses: Record<ReactionStatus, ReactionStatusItem> = {
+  ok: { icon: CircleCheck, color: "green.100" },
+  in_progress: { icon: Clock4, color: "yellow.100" },
+  alert: { icon: CircleAlert, color: "red" },
 };
 
 // ===== ДАННЫЕ ДЛЯ ФОРМ =====
@@ -142,4 +300,5 @@ export {
   CATEGORY_LABELS,
   STATUS_LABELS,
   mockTickets,
+  reactionStatuses,
 };

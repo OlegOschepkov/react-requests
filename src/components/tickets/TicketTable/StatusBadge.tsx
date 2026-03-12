@@ -9,7 +9,17 @@ interface Props {
 const StatusBadge = ({ status }: Props) => {
   const config = statusMap[status];
 
-  return <Badge color={config.color}>{config.label}</Badge>;
+  return (
+    <Badge
+      bg={config.color}
+      fontSize="14px"
+      lineHeight="24px"
+      padding="1px 6px"
+      borderRadius="4px"
+    >
+      {config.label}
+    </Badge>
+  );
 };
 
 export default StatusBadge;

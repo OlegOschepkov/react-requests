@@ -7,7 +7,7 @@ interface PageContainerProps {
 
 const PageContainer = ({ children }: PageContainerProps) => {
   return (
-    <Container maxW="1920px" px={{ base: 4, md: 6, lg: 8 }} py={6}>
+    <Container maxW="1920px" px={{ md: "16px", lg: "40px" }}>
       {children}
     </Container>
   );

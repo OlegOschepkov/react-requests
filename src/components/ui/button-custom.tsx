@@ -1,6 +1,6 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 
-type ButtonVariant = "base" | "dark";
+type ButtonVariant = "dark" | "noBorder" | "white";
 
 interface ButtonCustomProps extends HTMLChakraProps<"button"> {
   variant?: ButtonVariant;
@@ -37,6 +37,16 @@ const StyledButton = chakra("button", {
     _active: {
       transform: "scale(0.98)",
     },
+
+    "&[data-selected]": {
+      bg: "grey.700",
+      color: "grey.50 !important",
+      borderColor: "black",
+
+      _before: {
+        display: "none !important",
+      },
+    },
   },
 
   variants: {
@@ -50,6 +60,17 @@ const StyledButton = chakra("button", {
           transform: "translateY(-2px)",
           boxShadow: "lg",
         },
+      },
+
+      white: {
+        bg: "white",
+        color: "grey.700",
+        borderColor: "grey.700",
+      },
+
+      noBorder: {
+        border: "none",
+        padding: "8px 19px 8px 18px !important",
       },
     },
 
