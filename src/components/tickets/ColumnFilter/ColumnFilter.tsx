@@ -3,11 +3,10 @@ import {
   Portal,
   Input,
   VStack,
-  IconButton,
   NativeSelect,
   Icon,
 } from "@chakra-ui/react";
-import { LuFilter, LuTriangle } from "react-icons/lu";
+import { LuFilter } from "react-icons/lu";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
 
 interface ColumnFilterProps {

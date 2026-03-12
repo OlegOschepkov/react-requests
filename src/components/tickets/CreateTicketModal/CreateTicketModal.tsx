@@ -11,7 +11,7 @@ import {
   IconButton,
   Icon,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -35,7 +35,7 @@ import FormSelect from "@/components/tickets/CreateTicketModal/FormSelect.tsx";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
 import CustomText from "@/components/ui/custom-text.tsx";
 import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
-import { LuTriangle, LuX } from "react-icons/lu";
+import { LuX } from "react-icons/lu";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -56,6 +56,7 @@ const CreateTicketModal = ({
     setValue,
     control,
     watch,
+    setError,
     formState: { errors },
     reset,
   } = useForm<CreateTicketForm>({
@@ -349,25 +350,32 @@ const CreateTicketModal = ({
                   </Field.Root>
 
                   {/* Файлы */}
-                  <Field.Root>
-                    <Field.Label fontSize="12px" lineHeight="100%">
-                      Прикрепите файлы
-                    </Field.Label>
+                  <Controller
+                    name="files"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field.Root invalid={!!fieldState.error}>
+                        <Field.Label fontSize="12px" lineHeight="100%">
+                          Прикрепите файлы
+                        </Field.Label>
 
-                    <FileUploadComponent
-                      onChange={(files) =>
-                        setValue("files", files, { shouldValidate: true })
-                      }
-                    />
+                        <FileUploadComponent
+                          onChange={(files) =>
+                            setValue("files", files, { shouldValidate: true })
+                          }
+                          onError={(message) => setError("files", { message })}
+                        />
 
-                    <Field.ErrorText
-                      color="red"
-                      position="absolute"
-                      bottom="-15px"
-                    >
-                      {errors.files?.message}
-                    </Field.ErrorText>
-                  </Field.Root>
+                        <Field.ErrorText
+                          color="red"
+                          position="absolute"
+                          bottom="-15px"
+                        >
+                          {fieldState.error?.message}
+                        </Field.ErrorText>
+                      </Field.Root>
+                    )}
+                  />
                 </VStack>
               </HStack>
             </Dialog.Body>

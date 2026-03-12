@@ -28,20 +28,24 @@ export const createTicketSchema = z.object({
   warranty: z.boolean().optional().default(false),
   files: z
     .array(z.instanceof(File))
-    .max(MAX_FILES, `Можно загрузить максимум ${MAX_FILES} файлов`)
-    .refine(
-      (files) =>
-        files.every((file) => file.size <= MAX_FILE_SIZE_MB * 1024 * 1024),
-      `Максимальный размер файла ${MAX_FILE_SIZE_MB}MB`,
-    )
-    .refine(
-      (files) =>
-        files.every((file) =>
-          (ALLOWED_FILE_TYPES as readonly string[]).includes(file.type),
-        ),
-      "Разрешены только JPG, PNG, WEBP",
-    )
-    .optional(),
+    .max(MAX_FILES)
+    .superRefine((files, ctx) => {
+      files.forEach((file) => {
+        if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Файл ${file.name} слишком большой`,
+          });
+        }
+
+        if (!(ALLOWED_FILE_TYPES as readonly string[]).includes(file.type)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Файл ${file.name} имеет неверный формат`,
+          });
+        }
+      });
+    }),
 });
 
 export type CreateTicketForm = z.infer<typeof createTicketSchema>;

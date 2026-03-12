@@ -26,12 +26,11 @@ const TicketTableSkeleton = () => {
               ))}
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
-            {Array.from({ length: ROWS }).map((_, i) => (
-              <Table.Row key={i}>
-                {ticketColumns.map(() => (
-                  <Table.Cell>
+            {Array.from({ length: ROWS }).map((_, rowIndex) => (
+              <Table.Row key={rowIndex}>
+                {ticketColumns.map((column) => (
+                  <Table.Cell key={`skeleton-${rowIndex}-${column.key}`}>
                     <Skeleton height="20px" />
                   </Table.Cell>
                 ))}

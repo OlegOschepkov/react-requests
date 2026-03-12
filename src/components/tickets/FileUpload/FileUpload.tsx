@@ -7,16 +7,22 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { MAX_FILES } from "@/mockData/mockData.ts";
+import {
+  ALLOWED_FILE_TYPES,
+  MAX_FILE_SIZE_MB,
+  MAX_FILES,
+} from "@/mockData/mockData.ts";
 import CustomText from "@/components/ui/custom-text.tsx";
-import { LuImage, LuTriangle } from "react-icons/lu";
+import { LuImage } from "react-icons/lu";
+import ImgIcon from "@/components/ui/icon-img.tsx";
+import PdfIcon from "@/components/ui/icon-pdf.tsx";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;
-  error?: string;
-  invalid?: boolean;
+  onError?: (error: string | null) => void;
 }
-const FileUploadComponent = ({ onChange }: FileUploadProps) => {
+
+const FileUploadComponent = ({ onChange, onError }: FileUploadProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [files, setFiles] = useState<File[]>([]);
@@ -30,12 +36,37 @@ const FileUploadComponent = ({ onChange }: FileUploadProps) => {
 
   const processFiles = (fileList: FileList) => {
     const newFiles = Array.from(fileList);
-    const updatedFiles = [...files, ...newFiles].slice(0, MAX_FILES);
+
+    const validFiles = newFiles.filter((file) => {
+      if (!(ALLOWED_FILE_TYPES as readonly string[]).includes(file.type)) {
+        onError?.("Разрешены только JPG, PNG, WEBP");
+        return false;
+      }
+
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        onError?.(`Максимальный размер файла ${MAX_FILE_SIZE_MB}MB`);
+        return false;
+      }
+
+      if (files.length >= MAX_FILES) {
+        onError?.(`Можно загрузить максимум ${MAX_FILES} файлов`);
+        return false;
+      }
+
+      return true;
+    });
+
+    console.log("Валидные файлы:", validFiles);
+
+    if (validFiles.length === 0) {
+      return;
+    }
+
+    const updatedFiles = [...files, ...validFiles].slice(0, MAX_FILES);
     const newPreviews = updatedFiles.map((file) => URL.createObjectURL(file));
 
     setFiles(updatedFiles);
     setPreviews(newPreviews);
-
     onChange(updatedFiles);
   };
 
@@ -74,7 +105,7 @@ const FileUploadComponent = ({ onChange }: FileUploadProps) => {
         height="100px"
         align="center"
         justify="center"
-        gap="12px"
+        gap="6px"
         cursor="pointer"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -84,7 +115,7 @@ const FileUploadComponent = ({ onChange }: FileUploadProps) => {
           Выберите или перетащите фото или файл
         </CustomText>
 
-        <Icon as={LuImage} boxSize="20px" />
+        <ImgIcon boxSize="24px" />
 
         <input
           ref={inputRef}

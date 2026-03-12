@@ -20,15 +20,15 @@ interface ColumnFilters {
 
 const columnStyles = {
   id: { width: "90px" },
-  loc: { width: "260px" },
+  loc: { width: "260px", minWidth: "160px" },
   createdAt: { width: "165px" },
   priority: { width: "95px" },
-  about: { width: "300px" },
-  category: { width: "200px" },
+  about: { width: "300px", minWidth: "240px" },
+  category: { width: "200px", minWidth: "120px" },
   assignee: { width: "180px", minWidth: "180px" },
   reactionTime: { width: "120px", minWidth: "120px" },
   solution: { width: "120px", minWidth: "120px" },
-  status: { width: "auto", minWidth: "150px" }, // TODO
+  status: { width: "auto", minWidth: "120px" },
 };
 
 const TicketTable = ({ tickets, hasFilters }: TicketTableProps) => {

@@ -111,6 +111,7 @@ const TicketsPage = () => {
           <Tabs.List
             gap="8px"
             borderBottom="none"
+            flexWrap="wrap"
             py={{ md: "16px", lg: "22px" }}
           >
             {ticketTabs.map((tab) => {

@@ -1,8 +1,9 @@
 import { CloseButton, HStack, Icon, Input, InputGroup } from "@chakra-ui/react";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
-import { LuFileText, LuPlus, LuSearch } from "react-icons/lu";
+import { LuPlus, LuSearch } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+import PdfIcon from "@/components/ui/icon-pdf.tsx";
 
 interface Props {
   search: string;
@@ -44,8 +45,8 @@ const TicketToolbar = ({ search, onSearchChange, onCreateClick }: Props) => {
       </InputGroup>
 
       <HStack>
-        <ButtonCustom variant="base" gap="12px" padding="8px 12px">
-          <LuFileText />
+        <ButtonCustom gap="12px" padding="8px 12px">
+          <PdfIcon boxSize="15px" />
           Экспорт
         </ButtonCustom>
 

@@ -11,10 +11,10 @@ import {
   ChevronUp,
   CircleAlert,
   CircleCheck,
-  Clock4,
   Diamond,
   type LucideIcon,
 } from "lucide-react";
+import ClockFlyIcon from "@/components/ui/icon-clock-fly.tsx";
 
 // ===== ТИПЫ =====
 interface StatusMapItem {
@@ -30,7 +30,7 @@ interface PriorityStatusItem {
 }
 
 interface ReactionStatusItem {
-  icon: LucideIcon;
+  icon: React.ElementType;
   color: string;
 }
 
@@ -260,7 +260,7 @@ const priorityStatuses: Record<PriorityStatus, PriorityStatusItem> = {
 
 const reactionStatuses: Record<ReactionStatus, ReactionStatusItem> = {
   ok: { icon: CircleCheck, color: "green.100" },
-  in_progress: { icon: Clock4, color: "yellow.100" },
+  in_progress: { icon: ClockFlyIcon, color: "grey.700" },
   alert: { icon: CircleAlert, color: "red" },
 };
 

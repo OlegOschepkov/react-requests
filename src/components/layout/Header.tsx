@@ -7,6 +7,7 @@ import {
   Menu,
   IconButton,
   Icon,
+  Link,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
@@ -104,24 +105,32 @@ const Header = () => {
           )}
 
           <HStack gap="25px">
-            <Avatar.Root my="-3px 0">
-              <Avatar.Fallback name="Анна Иванова" />
-              <Avatar.Image w="35px" h="35px" src="/user-avatar.png" />
-              <Float placement="bottom-end" offsetX="1" offsetY="2">
-                <Flex
-                  alignItems="center"
-                  justifyContent="center"
-                  bg="red"
-                  width="20px"
-                  height="20px"
-                  borderRadius="50%"
-                >
-                  <CustomText color="white" variant="p" lineHeight="100%">
-                    2
-                  </CustomText>
-                </Flex>
-              </Float>
-            </Avatar.Root>
+            <Link href="#">
+              <Avatar.Root
+                my="-3px 0"
+                transition="all 0.2s"
+                _hover={{
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                }}
+              >
+                <Avatar.Fallback name="Анна Иванова" />
+                <Avatar.Image w="35px" h="35px" src="/user-avatar.png" />
+                <Float placement="bottom-end" offsetX="1" offsetY="2">
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    bg="red"
+                    width="20px"
+                    height="20px"
+                    borderRadius="50%"
+                  >
+                    <CustomText color="white" variant="p" lineHeight="100%">
+                      2
+                    </CustomText>
+                  </Flex>
+                </Float>
+              </Avatar.Root>
+            </Link>
             <ButtonCustom gap="4px">
               <Icon as={LuLogOut} boxSize="20px" />
               Выйти
