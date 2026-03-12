@@ -19,7 +19,7 @@ const TicketsFilters = ({ value, onChange }: TicketsFiltersProps) => {
           return (
             <CustomButton
               key={status.value}
-              variant={isActive ? "dark" : "base"}
+              variant={isActive ? "dark" : undefined}
               colorScheme={isActive ? "blackAlpha" : "gray"}
               onClick={() => onChange(status.value)}
             >

@@ -43,7 +43,19 @@ function FormSelect<T extends FieldValues>({
             onValueChange={(e) => field.onChange(e.value?.[0] ?? "")}
           >
             <Select.Trigger borderColor="grey.200">
-              <Select.ValueText placeholder={placeholder}>
+              <Select.ValueText
+                placeholder={placeholder}
+                css={{
+                  base: {
+                    fontSize: "12px",
+                    lineHeight: "100%",
+                  },
+                  md: {
+                    fontSize: "14px",
+                    lineHeight: "100%",
+                  },
+                }}
+              >
                 {options.find((o) => o.value === field.value)?.label}
               </Select.ValueText>
               <Select.Indicator

@@ -1,6 +1,6 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 
-type TextVariant = "p" | "p1" | "base100" | "h2";
+type TextVariant = "p" | "p1" | "p2" | "base100" | "h2";
 
 interface TextCustomProps extends HTMLChakraProps<"p"> {
   variant?: TextVariant;
@@ -27,6 +27,17 @@ const StyledText = chakra("p", {
 
       p1: {
         fontSize: "14px",
+      },
+
+      p2: {
+        base: {
+          fontSize: "12px",
+          lineHeight: "100%",
+        },
+        md: {
+          fontSize: "14px",
+          lineHeight: "100%",
+        },
       },
 
       h2: {

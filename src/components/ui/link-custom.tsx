@@ -44,7 +44,9 @@ const StyledLink = chakra("a", {
         color: "grey.200",
       },
       menu: {
-        color: "grey.200",
+        fontSize: { base: "20px", md: "16px" },
+        fontWeight: { base: 600, md: 400 },
+        color: { base: "grey.700", md: "grey.200" },
 
         _hover: {
           bgColor: "transparent",

@@ -13,9 +13,9 @@ import {
   MAX_FILES,
 } from "@/mockData/mockData.ts";
 import CustomText from "@/components/ui/custom-text.tsx";
-import { LuImage } from "react-icons/lu";
 import ImgIcon from "@/components/ui/icon-img.tsx";
-import PdfIcon from "@/components/ui/icon-pdf.tsx";
+import ButtonCustom from "@/components/ui/button-custom.tsx";
+import { LuPlus } from "react-icons/lu";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;
@@ -97,7 +97,25 @@ const FileUploadComponent = ({ onChange, onError }: FileUploadProps) => {
 
   return (
     <>
+      <ButtonCustom
+        display={{ base: "flex", md: "none" }}
+        gap="18px"
+        fontSize="16px !important"
+        fontWeight="500"
+        padding="13px 12px"
+        whiteSpace="nowrap"
+        alignItems="center"
+        width="100%"
+        border="none !important"
+        boxShadow="none"
+        onClick={() => inputRef.current?.click()}
+      >
+        <Icon as={LuPlus} boxSize="20px" />
+        Прикрепить файлы
+      </ButtonCustom>
+
       <VStack
+        display={{ base: "none", md: "flex" }}
         border="1px dashed"
         borderColor="grey.200"
         borderRadius="14px"
@@ -116,15 +134,15 @@ const FileUploadComponent = ({ onChange, onError }: FileUploadProps) => {
         </CustomText>
 
         <ImgIcon boxSize="24px" />
-
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          hidden
-          onChange={handleInputChange}
-        />
       </VStack>
+
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        hidden
+        onChange={handleInputChange}
+      />
 
       {previews.length > 0 && (
         <HStack wrap="wrap" mt={4}>

@@ -10,6 +10,7 @@ import {
   List,
   IconButton,
   Icon,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +36,7 @@ import FormSelect from "@/components/tickets/CreateTicketModal/FormSelect.tsx";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
 import CustomText from "@/components/ui/custom-text.tsx";
 import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
-import { LuX } from "react-icons/lu";
+import { LuArrowLeft, LuX } from "react-icons/lu";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -49,7 +50,7 @@ const CreateTicketModal = ({
   onCreate,
 }: CreateTicketModalProps) => {
   const [isFocused, setIsFocused] = useState(false);
-
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const {
     register,
     handleSubmit,
@@ -146,24 +147,48 @@ const CreateTicketModal = ({
 
         <Dialog.Positioner>
           <Dialog.Content maxW="1007px" w="full" borderRadius="15px">
-            <Dialog.Header padding="33px 37px">
+            <Dialog.Header
+              padding={{ base: "27px 47px", md: "33px 37px" }}
+              borderBottom={{ base: "1px solid", md: "none" }}
+              borderColor="grey.150"
+            >
               <Dialog.CloseTrigger asChild>
-                <Box position="absolute" top="25px" right="33px">
+                <Box
+                  position="absolute"
+                  top={{ base: "16px", md: "25px" }}
+                  right={{ base: "calc(100% - 47px)", md: "33px" }}
+                >
                   <IconButton
                     aria-label="Close"
                     variant="ghost"
                     onClick={onClose}
                   >
-                    <Icon as={LuX} boxSize="32px" />
+                    <Icon
+                      as={LuX}
+                      boxSize="32px"
+                      display={{ base: "none", md: "inline-block" }}
+                    />
+                    <Icon
+                      as={LuArrowLeft}
+                      boxSize="24px"
+                      display={{ base: "inline-block", md: "none" }}
+                    />
                   </IconButton>
                 </Box>
               </Dialog.CloseTrigger>
-              <Dialog.Title fontWeight="500" fontSize="24px" lineHeight="100%">
+              <Dialog.Title
+                fontWeight="500"
+                fontSize={{ base: "20px", md: "24px" }}
+                lineHeight="100%"
+              >
                 Создание заявки
               </Dialog.Title>
             </Dialog.Header>
 
-            <Dialog.Body width="100%" padding="3px 37px">
+            <Dialog.Body
+              width="100%"
+              padding={{ base: "24px 16px", md: "3px 37px" }}
+            >
               <HStack
                 wrap="wrap"
                 gap="36px"
@@ -171,7 +196,7 @@ const CreateTicketModal = ({
                 align="top"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <VStack flex="300px" gap="54px">
+                <VStack flex="300px" gap={{ base: "24px", md: "56px" }}>
                   {/* Аптека */}
                   <Field.Root invalid={!!errors.locId} gap="10px">
                     <Field.Label fontSize="12px" lineHeight="100%">
@@ -242,9 +267,20 @@ const CreateTicketModal = ({
                     </Field.Label>
 
                     <Textarea
+                      resize="none"
                       {...register("about")}
                       height="70px"
                       placeholder="Дайте заявке краткое название: например, сломался холодильник или не работает кондиционер"
+                      _placeholder={{
+                        base: {
+                          fontSize: "12px",
+                          lineHeight: "100%",
+                        },
+                        md: {
+                          fontSize: "14px",
+                          lineHeight: "100%",
+                        },
+                      }}
                     />
 
                     <Field.ErrorText
@@ -285,6 +321,7 @@ const CreateTicketModal = ({
                     </Field.Label>
 
                     <Textarea
+                      resize="none"
                       height="164px"
                       {...register("description")}
                       onFocus={() => setIsFocused(true)}
@@ -298,23 +335,22 @@ const CreateTicketModal = ({
                         top="33px"
                         pointerEvents="none"
                       >
-                        <CustomText variant="p1" color="grey.200">
+                        <CustomText variant="p2" color="grey.200">
                           Кратко опишите проблему:
                         </CustomText>
 
                         <List.Root margin="16px 0 0 23px" gap="3px">
                           <CustomText
                             as="li"
-                            variant="p1"
+                            variant="p2"
                             color="grey.200"
                             lineHeight="100%"
                           >
-                            {" "}
                             что случилось?
                           </CustomText>
                           <CustomText
                             as="li"
-                            variant="p1"
+                            variant="p2"
                             color="grey.200"
                             lineHeight="100%"
                           >
@@ -322,7 +358,7 @@ const CreateTicketModal = ({
                           </CustomText>
                           <CustomText
                             as="li"
-                            variant="p1"
+                            variant="p2"
                             color="grey.200"
                             lineHeight="100%"
                           >
@@ -330,7 +366,7 @@ const CreateTicketModal = ({
                           </CustomText>
                           <CustomText
                             as="li"
-                            variant="p1"
+                            variant="p2"
                             color="grey.200"
                             lineHeight="100%"
                           >
@@ -350,46 +386,86 @@ const CreateTicketModal = ({
                   </Field.Root>
 
                   {/* Файлы */}
-                  <Controller
-                    name="files"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field.Root invalid={!!fieldState.error}>
-                        <Field.Label fontSize="12px" lineHeight="100%">
-                          Прикрепите файлы
-                        </Field.Label>
+                  {!isMobile && (
+                    <Controller
+                      name="files"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field.Root invalid={!!fieldState.error}>
+                          <Field.Label fontSize="12px" lineHeight="100%">
+                            Прикрепите файлы
+                          </Field.Label>
 
-                        <FileUploadComponent
-                          onChange={(files) =>
-                            setValue("files", files, { shouldValidate: true })
-                          }
-                          onError={(message) => setError("files", { message })}
-                        />
+                          <FileUploadComponent
+                            onChange={(files) =>
+                              setValue("files", files, { shouldValidate: true })
+                            }
+                            onError={(message) =>
+                              setError("files", { message })
+                            }
+                          />
 
-                        <Field.ErrorText
-                          color="red"
-                          position="absolute"
-                          bottom="-15px"
-                        >
-                          {fieldState.error?.message}
-                        </Field.ErrorText>
-                      </Field.Root>
-                    )}
-                  />
+                          <Field.ErrorText
+                            color="red"
+                            position="absolute"
+                            bottom="-15px"
+                          >
+                            {fieldState.error?.message}
+                          </Field.ErrorText>
+                        </Field.Root>
+                      )}
+                    />
+                  )}
                 </VStack>
               </HStack>
             </Dialog.Body>
 
-            <Dialog.Footer p="34px 34px 38px 34px" justifyContent="start">
+            <Dialog.Footer
+              p={{ base: "24px 16px 24px 16px", md: "34px 34px 38px 34px" }}
+              justifyContent="start"
+              flexDirection={{ base: "column", md: "row" }}
+            >
+              {isMobile && (
+                <Controller
+                  name="files"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field.Root invalid={!!fieldState.error}>
+                      <Field.Label fontSize="12px" lineHeight="100%">
+                        Прикрепите файлы
+                      </Field.Label>
+
+                      <FileUploadComponent
+                        onChange={(files) =>
+                          setValue("files", files, { shouldValidate: true })
+                        }
+                        onError={(message) => setError("files", { message })}
+                      />
+
+                      <Field.ErrorText
+                        color="red"
+                        position="absolute"
+                        bottom="-15px"
+                      >
+                        {fieldState.error?.message}
+                      </Field.ErrorText>
+                    </Field.Root>
+                  )}
+                />
+              )}
+
               <ButtonCustom
                 variant="dark"
                 borderRadius="5px"
+                width={{ base: "100%", md: "auto" }}
+                padding={{ base: "13px 12px", md: "8px 20px" }}
                 onClick={handleSubmit(onSubmit)}
               >
                 Создать заявку
               </ButtonCustom>
 
               <ButtonCustom
+                display={{ base: "none", md: "flex" }}
                 onClick={onClose}
                 variant="white"
                 borderRadius="5px"

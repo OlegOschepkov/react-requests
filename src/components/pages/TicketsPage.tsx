@@ -18,7 +18,7 @@ type TicketTabItem = {
   label: string;
   icon?: IconType;
   dividerBefore?: boolean;
-  showCount?: boolean; // 👈 флаг для показа количества
+  showCount?: boolean;
 };
 
 const ticketTabs: TicketTabItem[] = [
@@ -35,7 +35,7 @@ const ticketTabs: TicketTabItem[] = [
     label: "Показать только мои",
     icon: LuFilter,
     dividerBefore: true,
-    showCount: true, // 👈 для "Мои" тоже показываем количество
+    showCount: true,
   },
 ];
 
@@ -111,17 +111,33 @@ const TicketsPage = () => {
           <Tabs.List
             gap="8px"
             borderBottom="none"
-            flexWrap="wrap"
-            py={{ md: "16px", lg: "22px" }}
+            flexWrap={{ base: "nowrap", md: "wrap" }}
+            overflowX={{ base: "auto", md: "visible" }}
+            width={{ base: "calc(100% + 32px)", md: "100%" }}
+            py={{ base: "25px 16px", md: "22px" }}
+            px={{ base: "16px", md: "0" }}
+            mx={{ base: "-16px -16px", md: "0" }}
+            css={{
+              scrollbarWidth: "none",
+            }}
+            scrollBehavior="smooth"
           >
             {ticketTabs.map((tab) => {
               const Icon = tab.icon;
               const count = tabCounts[tab.value];
 
               return (
-                <HStack key={tab.value}>
+                <HStack
+                  key={tab.value}
+                  order={{
+                    base:
+                      tab.value === "mine" ? 0 : tab.value === "all" ? 1 : 2,
+                    md: "initial",
+                  }}
+                >
                   {tab.dividerBefore && (
                     <Box
+                      display={{ base: "none", md: "block" }}
                       bg="grey.100"
                       width="3px"
                       alignSelf="stretch"
@@ -130,9 +146,22 @@ const TicketsPage = () => {
                   )}
 
                   <Tabs.Trigger value={tab.value} asChild>
-                    <ButtonCustom gap="10px" fontSize="16px" variant="noBorder">
+                    <ButtonCustom
+                      gap="10px"
+                      variant="noBorder"
+                      whiteSpace="nowrap"
+                    >
                       {Icon && <Icon />}
-                      {tab.label}
+
+                      <Box
+                        display={{
+                          base: tab.value === "mine" ? "none" : "inline",
+                          md: "inline",
+                        }}
+                      >
+                        {tab.label}
+                      </Box>
+
                       {tab.showCount && count > 0 && (
                         <Badge
                           bg="grey.100"
@@ -151,7 +180,7 @@ const TicketsPage = () => {
                   </Tabs.Trigger>
                 </HStack>
               );
-            })}
+            })}{" "}
           </Tabs.List>
 
           <Box
@@ -164,7 +193,11 @@ const TicketsPage = () => {
           />
 
           {ticketTabs.map((tab) => (
-            <Tabs.Content key={tab.value} value={tab.value} py="31px">
+            <Tabs.Content
+              key={tab.value}
+              value={tab.value}
+              py={{ base: "8px 31px", md: "31px" }}
+            >
               <TicketTable
                 tickets={getTabTickets(tab.value, filteredTickets)}
                 hasFilters={!!searchQuery}
@@ -178,6 +211,18 @@ const TicketsPage = () => {
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onCreate={handleCreateTicket}
+      />
+
+      <Box
+        display={{ base: "block", md: "none" }} // только на мобильных
+        position="fixed"
+        bottom={0}
+        left={0}
+        right={0}
+        height="50px"
+        bgGradient="linear-gradient(transparent, white 80%)"
+        pointerEvents="none"
+        zIndex="10"
       />
     </PageContainer>
   );

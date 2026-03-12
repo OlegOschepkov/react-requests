@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import PageContainer from "@/components/layout/PageContainer.tsx";
 import LinkCustom from "@/components/ui/link-custom.tsx";
-import { MenuIcon } from "lucide-react";
 import { LuLogOut, LuTriangle } from "react-icons/lu";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
 import CustomText from "@/components/ui/custom-text.tsx";
@@ -26,25 +25,34 @@ const Header = () => {
         <HStack
           align="center"
           justify="space-between"
-          py={{ md: "16px", lg: "22px" }}
+          py={{ base: "8px 23px", md: "22px" }}
         >
           {isMobile ? (
             <Menu.Root>
               <Menu.Trigger asChild>
-                <IconButton aria-label="Меню" variant="ghost">
-                  <MenuIcon size={24} />
+                <IconButton
+                  variant="ghost"
+                  gap="4px"
+                  outline="none"
+                  _hover={{
+                    bgColor: "transparent",
+                  }}
+                >
+                  <LinkCustom as="p" variant={"menu"}>
+                    Заявки
+                  </LinkCustom>
+                  <Icon
+                    as={LuTriangle}
+                    fill="inherit"
+                    boxSize="7px"
+                    transform="rotate(180deg)"
+                  />
                 </IconButton>
               </Menu.Trigger>
 
               <Menu.Positioner>
                 <Menu.Content>
-                  <Menu.Item value="tickets" asChild>
-                    <LinkCustom href="#" variant={"current"}>
-                      Заявки
-                    </LinkCustom>
-                  </Menu.Item>
-
-                  <Menu.Item value="reports" asChild>
+                  <Menu.Item value="reports">
                     <LinkCustom href="#" variant={"light"}>
                       Отчёты
                     </LinkCustom>
@@ -107,7 +115,7 @@ const Header = () => {
           <HStack gap="25px">
             <Link href="#">
               <Avatar.Root
-                my="-3px 0"
+                margin={{ base: "0 6px -10px 0", md: "-3px 0 0 0" }}
                 transition="all 0.2s"
                 _hover={{
                   boxShadow: "0 2px 12px rgba(0,0,0,0.8)",
@@ -131,7 +139,7 @@ const Header = () => {
                 </Float>
               </Avatar.Root>
             </Link>
-            <ButtonCustom gap="4px">
+            <ButtonCustom gap="4px" display={{ base: "none", md: "block" }}>
               <Icon as={LuLogOut} boxSize="20px" />
               Выйти
             </ButtonCustom>

@@ -46,6 +46,7 @@ export const ticketColumns: Column<Ticket>[] = [
           letterSpacing="8%"
           padding="1px 3px"
           marginRight="9px"
+          display={{ base: "none", md: "inline-block" }}
         >
           {ticket.loc.id}
         </CustomText>

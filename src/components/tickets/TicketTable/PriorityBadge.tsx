@@ -14,7 +14,7 @@ const PriorityBadge = ({ status, variant }: Props) => {
 
   return (
     <HStack
-      display="inline-flex"
+      display="flex"
       alignItems="center"
       gap="10px"
       fontSize="12px"
@@ -25,9 +25,17 @@ const PriorityBadge = ({ status, variant }: Props) => {
       <Box as="span" color={color}>
         <Icon size={16} />
       </Box>
-      {label}
+      <Box display={{ base: "none", md: "block" }}>{label}</Box>
       {variant && (
-        <CustomText as="span" color="grey.200">
+        <CustomText as="span" color="grey.200" variant="p2" py="12px">
+          <CustomText
+            display={{ base: "block", md: "none" }}
+            color="grey.700"
+            as="span"
+            variant="p2"
+          >
+            {label}
+          </CustomText>
           {select}
         </CustomText>
       )}

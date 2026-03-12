@@ -29,6 +29,17 @@ const system = createSystem(defaultConfig, {
           lineHeight: "24px",
           borderRadius: "6px",
           bg: "white",
+
+          _placeholder: {
+            base: {
+              fontSize: "12px",
+              lineHeight: "100%",
+            },
+            md: {
+              fontSize: "14px",
+              lineHeight: "100%",
+            },
+          },
         },
 
         variants: {

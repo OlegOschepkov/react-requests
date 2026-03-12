@@ -10,8 +10,8 @@ interface ButtonCustomProps extends HTMLChakraProps<"button"> {
 const StyledButton = chakra("button", {
   base: {
     fontWeight: 400,
-    fontSize: "16px",
     lineHeight: "24px",
+    fontSize: { base: "14px", md: "16px !important" },
     padding: "8px 20px",
     borderRadius: "4px",
     transition: "all 0.2s",
@@ -54,6 +54,7 @@ const StyledButton = chakra("button", {
       dark: {
         bg: "grey.700",
         color: "grey.50",
+        fontSize: { base: "16px", md: "16px !important" },
 
         _hover: {
           bg: "grey.700",
@@ -70,7 +71,11 @@ const StyledButton = chakra("button", {
 
       noBorder: {
         border: "none",
-        padding: "8px 19px 8px 18px !important",
+        padding: {
+          base: "6px 12px !important",
+          md: "8px 19px 8px 18px !important",
+        },
+        height: "auto !important",
       },
     },
 
