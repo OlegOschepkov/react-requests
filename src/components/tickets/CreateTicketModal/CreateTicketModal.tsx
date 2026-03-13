@@ -7,12 +7,11 @@ import {
   HStack,
   Box,
   Textarea,
-  List,
   IconButton,
   Icon,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import {
@@ -20,7 +19,6 @@ import {
   priorityOptions,
   locOptions,
 } from "./createTicketOptions";
-import FileUploadComponent from "@/components/tickets/FileUpload/FileUpload.tsx";
 
 import {
   type CreateTicketForm,
@@ -29,21 +27,13 @@ import {
 
 import type { FormTicket } from "@/types/ticket.ts";
 
-import {
-  CATEGORY_LABELS,
-  PRIORITY_LABELS,
-  formLocValues,
-} from "@/mockData/mockData.ts";
-import { mapRecordToOptions } from "@/hooks/mapRecordToOptions.ts";
-import { formatCreatedAt } from "@/utils/dateFormat.ts";
 import FormSelect from "@/components/tickets/CreateTicketModal/FormSelect.tsx";
 import ButtonCustom from "@/components/ui/button-custom.tsx";
-import CustomText from "@/components/ui/custom-text.tsx";
-import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge.tsx";
 import { LuArrowLeft, LuX } from "react-icons/lu";
 import { createTicketFromForm } from "@/components/tickets/CreateTicketModal/useCreateTicketSubmit.tsx";
 import DescriptionPlaceholder from "@/components/tickets/CreateTicketModal/DescriptionPlaceholder.tsx";
 import FileUploadField from "@/components/tickets/CreateTicketModal/FileUploadField.tsx";
+import FormField from "@/components/tickets/CreateTicketModal/FormField.tsx";
 
 interface CreateTicketModalProps {
   open: boolean;
@@ -67,13 +57,13 @@ const CreateTicketModal = ({
     setError,
     formState: { errors },
     reset,
-  } = useForm<CreateTicketForm>({
+  } = useForm({
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
       status: "new",
       files: [],
       locId: "",
-      category: "",
+      category: null,
       priority: "medium",
       warranty: false,
     },
@@ -91,7 +81,7 @@ const CreateTicketModal = ({
     }
   };
 
-  const aboutValue = watch("about");
+  const aboutValue = watch("description");
   const showAboutPlaceholder = !aboutValue && !isFocused;
 
   return (
@@ -155,52 +145,27 @@ const CreateTicketModal = ({
                 align="top"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <VStack flex="300px" gap={{ base: "24px", md: "56px" }}>
+                <VStack flex="300px" gap={{ base: "24px", md: "50px" }}>
                   {/* Аптека */}
-                  <Field.Root invalid={!!errors.locId} gap="10px">
-                    <Field.Label fontSize="12px" lineHeight="100%">
-                      Аптека
-                    </Field.Label>
-
-                    <FormSelect<CreateTicketForm>
+                  <FormField label="Аптека" error={errors.locId}>
+                    <FormSelect
                       name="locId"
                       control={control}
                       options={locOptions}
                       placeholder="Выберите аптеку от которой исходит заявка"
-                      minHeight="48px"
                     />
-
-                    <Field.ErrorText
-                      color="red"
-                      position="absolute"
-                      bottom="-15px"
-                    >
-                      {errors.locId?.message}
-                    </Field.ErrorText>
-                  </Field.Root>
+                  </FormField>
 
                   <VStack width="100%" gap="16px">
                     {/* Категория */}
-                    <Field.Root invalid={!!errors.category} gap="10px">
-                      <Field.Label fontSize="12px" lineHeight="100%">
-                        Категория заявки
-                      </Field.Label>
-
-                      <FormSelect<CreateTicketForm>
+                    <FormField label="Категория заявки" error={errors.category}>
+                      <FormSelect
                         name="category"
                         control={control}
                         options={categoryOptions}
                         placeholder="Холодильники, кондиционеры или другое"
                       />
-
-                      <Field.ErrorText
-                        color="red"
-                        position="absolute"
-                        bottom="-15px"
-                      >
-                        {errors.category?.message}
-                      </Field.ErrorText>
-                    </Field.Root>
+                    </FormField>
 
                     {/* Гарантия */}
                     <Field.Root>
@@ -218,13 +183,9 @@ const CreateTicketModal = ({
                   </VStack>
                 </VStack>
 
-                <VStack flex="300px" gap="25px">
-                  {/* Тема с кастомным плейсхолдером */}
-                  <Field.Root invalid={!!errors.about} gap="10px">
-                    <Field.Label fontSize="12px" lineHeight="100%">
-                      Тема заявки
-                    </Field.Label>
-
+                <VStack flex="300px" gap="20px">
+                  {/* Тема заявки */}
+                  <FormField label="Тема заявки" error={errors.about}>
                     <Textarea
                       resize="none"
                       {...register("about")}
@@ -241,44 +202,23 @@ const CreateTicketModal = ({
                         },
                       }}
                     />
-
-                    <Field.ErrorText
-                      color="red"
-                      position="absolute"
-                      bottom="-15px"
-                    >
-                      {errors.about?.message}
-                    </Field.ErrorText>
-                  </Field.Root>
+                  </FormField>
 
                   {/* Приоритет */}
-                  <Field.Root invalid={!!errors.status} gap="10px">
-                    <Field.Label fontSize="12px" lineHeight="100%">
-                      Приоритет
-                    </Field.Label>
-
-                    <FormSelect<CreateTicketForm>
+                  <FormField label="Приоритет" error={errors.priority}>
+                    <FormSelect
                       name="priority"
                       control={control}
                       options={priorityOptions}
                       placeholder="Выберите приоритет"
                     />
-
-                    <Field.ErrorText
-                      color="red"
-                      position="absolute"
-                      bottom="-15px"
-                    >
-                      {errors.priority?.message}
-                    </Field.ErrorText>
-                  </Field.Root>
+                  </FormField>
 
                   {/* Описание */}
-                  <Field.Root invalid={!!errors.description} gap="10px">
-                    <Field.Label fontSize="12px" lineHeight="100%">
-                      Описание проблемы
-                    </Field.Label>
-
+                  <FormField
+                    label="Описание проблемы"
+                    error={errors.description}
+                  >
                     <Textarea
                       resize="none"
                       height="164px"
@@ -288,15 +228,7 @@ const CreateTicketModal = ({
                     />
 
                     {showAboutPlaceholder && <DescriptionPlaceholder />}
-
-                    <Field.ErrorText
-                      color="red"
-                      position="absolute"
-                      bottom="-15px"
-                    >
-                      {errors.description?.message}
-                    </Field.ErrorText>
-                  </Field.Root>
+                  </FormField>
 
                   {/* Файлы */}
                   {!isMobile && (

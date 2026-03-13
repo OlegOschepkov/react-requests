@@ -32,6 +32,7 @@ const TicketToolbar = ({ search, onSearchChange, onCreateClick }: Props) => {
 
   useEffect(() => {
     setExpanded(!isMobile);
+    console.log(expanded);
   }, [isMobile]);
 
   const handleClear = () => {
@@ -41,7 +42,12 @@ const TicketToolbar = ({ search, onSearchChange, onCreateClick }: Props) => {
   };
 
   const endElement = localSearch ? (
-    <CloseButton size="xs" onClick={handleClear} me="-2" />
+    <CloseButton
+      size="xs"
+      onClick={handleClear}
+      me="-2"
+      display={{ base: "block", md: "none" }}
+    />
   ) : undefined;
 
   return (

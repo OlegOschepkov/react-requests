@@ -7,16 +7,13 @@ import { mapRecordToOptions } from "@/hooks/mapRecordToOptions";
 import PriorityBadge from "@/components/tickets/TicketTable/PriorityBadge";
 import { Box } from "@chakra-ui/react";
 import CustomText from "@/components/ui/custom-text";
-import type { PriorityStatus } from "@/types/ticket";
 
 export const categoryOptions = mapRecordToOptions(CATEGORY_LABELS);
 
 export const priorityOptions = mapRecordToOptions(PRIORITY_LABELS).map(
   (label) => ({
     value: label.value,
-    label: (
-      <PriorityBadge status={label.value as PriorityStatus} variant="select" />
-    ),
+    label: <PriorityBadge status={label.value} variant="select" />,
   }),
 );
 

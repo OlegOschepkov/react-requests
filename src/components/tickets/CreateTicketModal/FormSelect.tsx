@@ -6,19 +6,15 @@ import {
   type Path,
 } from "react-hook-form";
 import { LuChevronDown } from "react-icons/lu";
+import type { SelectOption } from "@/types/ticket.ts";
 
-export type SelectOption = {
-  value: string;
-  label: React.ReactNode;
-};
-
-interface FormSelectProps<T extends FieldValues> {
+type FormSelectProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
   options: SelectOption[];
   placeholder?: string;
   invalid?: boolean;
-}
+};
 
 function FormSelect<T extends FieldValues>({
   name,
@@ -44,6 +40,7 @@ function FormSelect<T extends FieldValues>({
           >
             <Select.Trigger borderColor="grey.200">
               <Select.ValueText
+                maxWidth="100%"
                 placeholder={placeholder}
                 css={{
                   base: {

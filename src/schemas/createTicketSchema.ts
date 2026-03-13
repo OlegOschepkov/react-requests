@@ -17,8 +17,8 @@ export const createTicketSchema = z.object({
   ),
   category: z
     .enum(Object.keys(CATEGORY_LABELS) as [Category, ...Category[]])
-    .or(z.literal(""))
-    .refine((val) => val !== "", {
+    .nullable()
+    .refine((val) => val !== null, {
       message: "Выберите категорию заявки",
     }),
   priority: z.enum(

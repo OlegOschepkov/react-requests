@@ -27,12 +27,18 @@ const PriorityBadge = ({ status, variant }: Props) => {
       </Box>
       <Box display={{ base: "none", md: "block" }}>{label}</Box>
       {variant && (
-        <CustomText as="span" color="grey.200" variant="p2" py="12px">
+        <CustomText
+          as="span"
+          color="grey.200"
+          py={{ base: "6px", md: "8px" }}
+          variant="base100"
+        >
           <CustomText
             display={{ base: "block", md: "none" }}
             color="grey.700"
             as="span"
-            variant="p2"
+            variant="base100"
+            marginBottom="2px"
           >
             {label}
           </CustomText>

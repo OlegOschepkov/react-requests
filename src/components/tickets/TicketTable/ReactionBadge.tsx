@@ -22,7 +22,7 @@ const ReactionBadge = ({ status, label }: Props) => {
       align="center"
     >
       <Box as="span" color="inherit">
-        <Icon size={16} />
+        {label.length > 0 && <Icon size={16} />}
       </Box>
       {label}
     </HStack>
