@@ -11,7 +11,7 @@ import {
   Icon,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { type Control, useForm, type UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import {
@@ -233,8 +233,8 @@ const CreateTicketModal = ({
                   {/* Файлы */}
                   {!isMobile && (
                     <FileUploadField
-                      control={control}
-                      setValue={setValue}
+                      control={control as Control<CreateTicketForm>}
+                      setValue={setValue as UseFormSetValue<CreateTicketForm>}
                       setError={setError}
                     />
                   )}
@@ -249,8 +249,8 @@ const CreateTicketModal = ({
             >
               {isMobile && (
                 <FileUploadField
-                  control={control}
-                  setValue={setValue}
+                  control={control as Control<CreateTicketForm>}
+                  setValue={setValue as UseFormSetValue<CreateTicketForm>}
                   setError={setError}
                 />
               )}
